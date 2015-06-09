@@ -1,0 +1,15 @@
+//
+//  TwitterDM-Prefix.pch
+//  TwitterDM
+//
+//  Created by Vickie Duong on 6/8/15.
+//  Copyright (c) 2015 HeartThis. All rights reserved.
+//
+
+#ifndef TwitterDM_TwitterDM_Prefix_pch
+#define TwitterDM_TwitterDM_Prefix_pch
+
+#define ScreenHeight [UIScreen mainScreen].bounds.size.height
+#define ScreenWidth  [UIScreen mainScreen].bounds.size.width
+
+#endif

@@ -25,6 +25,7 @@
 		91DDBC801B267CDE006D7631 /* Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 91DDBC7F1B267CDE006D7631 /* Settings.png */; };
 		91DDBC821B267CE6006D7631 /* Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91DDBC811B267CE6006D7631 /* Settings@2x.png */; };
 		91DDBC851B267F88006D7631 /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91DDBC841B267F88006D7631 /* MessageTableViewCell.m */; };
+		91DDBC891B26C9E6006D7631 /* MessageUILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 91DDBC881B26C9E6006D7631 /* MessageUILabel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,9 @@
 		91DDBC811B267CE6006D7631 /* Settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Settings@2x.png"; sourceTree = "<group>"; };
 		91DDBC831B267F88006D7631 /* MessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageTableViewCell.h; path = Views/MessageTableViewCell.h; sourceTree = "<group>"; };
 		91DDBC841B267F88006D7631 /* MessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageTableViewCell.m; path = Views/MessageTableViewCell.m; sourceTree = "<group>"; };
+		91DDBC861B26BE03006D7631 /* TwitterDM-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TwitterDM-Prefix.pch"; sourceTree = "<group>"; };
+		91DDBC871B26C9E6006D7631 /* MessageUILabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageUILabel.h; path = Views/MessageUILabel.h; sourceTree = "<group>"; };
+		91DDBC881B26C9E6006D7631 /* MessageUILabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageUILabel.m; path = Views/MessageUILabel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,7 @@
 				918341AD1B26435000A53B8A /* Images.xcassets */,
 				918341AF1B26435000A53B8A /* LaunchScreen.xib */,
 				918341A01B26435000A53B8A /* Supporting Files */,
+				91DDBC861B26BE03006D7631 /* TwitterDM-Prefix.pch */,
 			);
 			path = TwitterDM;
 			sourceTree = "<group>";
@@ -172,6 +177,8 @@
 				91DDBC7A1B2661C4006D7631 /* TwitterHandleTableViewCell.m */,
 				91DDBC831B267F88006D7631 /* MessageTableViewCell.h */,
 				91DDBC841B267F88006D7631 /* MessageTableViewCell.m */,
+				91DDBC871B26C9E6006D7631 /* MessageUILabel.h */,
+				91DDBC881B26C9E6006D7631 /* MessageUILabel.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -289,6 +296,7 @@
 				918341A61B26435000A53B8A /* AppDelegate.m in Sources */,
 				918341A31B26435000A53B8A /* main.m in Sources */,
 				91DDBC7B1B2661C4006D7631 /* TwitterHandleTableViewCell.m in Sources */,
+				91DDBC891B26C9E6006D7631 /* MessageUILabel.m in Sources */,
 				918341D61B264A2D00A53B8A /* MessagesTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,6 +364,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = "TwitterDM/TwitterDM-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -398,6 +407,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "TwitterDM/TwitterDM-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

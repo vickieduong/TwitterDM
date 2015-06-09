@@ -11,5 +11,6 @@
 @interface MessageTableViewCell : UITableViewCell
 
 - (void)setText:(NSString *)text isMine:(BOOL)isMine;
+- (CGFloat)getEstimatedHeight;
 
 @end
