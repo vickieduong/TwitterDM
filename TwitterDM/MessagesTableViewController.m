@@ -10,6 +10,7 @@
 #import "LoginViewController.h"
 #import "TwitterHandleTableViewCell.h"
 #import "ThreadViewController.h"
+#import "AccountsTableViewController.h"
 
 @import Accounts;
 @import Social;
@@ -22,6 +23,8 @@
 @property (nonatomic, strong) NSMutableArray *users;
 @property (nonatomic) BOOL infiniteLoading;
 @property (nonatomic) BOOL endOfFeed;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *switchAccountsBarButtonItem;
+@property (nonatomic, strong) NSArray *accounts;
 
 @end
 
@@ -42,17 +45,22 @@
     if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
         [self.tableView setLayoutMargins:UIEdgeInsetsZero];
     }
- 
+    
     ACAccountStore *accountStore = [[ACAccountStore alloc] init];
     ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error){
         if (granted) {
-            NSArray *accounts = [accountStore accountsWithAccountType:accountType];
+            self.accounts = [accountStore accountsWithAccountType:accountType];
             // Check if the users has setup at least one Twitter account
-            if (accounts.count > 0)
+            if (self.accounts.count > 0)
             {
-                // enable multiple accounts
-                self.twitterAccount = [accounts lastObject];
+                if(self.accounts.count > 1) {
+                    self.switchAccountsBarButtonItem.enabled = YES;
+                } else {
+                    self.navigationItem.rightBarButtonItem = nil;
+                }
+                
+                self.twitterAccount = [self.accounts firstObject];
             } else {
                 [self presentLogin];
             }
@@ -202,11 +210,16 @@
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    TwitterHandleTableViewCell *cell = (TwitterHandleTableViewCell *)sender;
-    NSDictionary *user = cell.user;
-    
-    ThreadViewController *vc = (ThreadViewController *)[segue destinationViewController];
-    vc.user = user;
+    if([sender isKindOfClass:[TwitterHandleTableViewCell class]]) {
+        TwitterHandleTableViewCell *cell = (TwitterHandleTableViewCell *)sender;
+        NSDictionary *user = cell.user;
+        
+        ThreadViewController *vc = (ThreadViewController *)[segue destinationViewController];
+        vc.user = user;
+    } else if([sender isKindOfClass:[UIBarButtonItem class]]) {
+        AccountsTableViewController *vc = (AccountsTableViewController *)[segue destinationViewController];
+        vc.accounts = self.accounts;
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

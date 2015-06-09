@@ -24,10 +24,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if(self.user) {
-        self.navigationItem.title = [NSString stringWithFormat:@"@%@", self.user[@"screen_name"]];
-    }
-    
     UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)];
     [self.tableView addGestureRecognizer:tapper];
     
@@ -48,6 +44,32 @@
                                              selector:@selector(keyboardHidden:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+    
+    if(self.user) {
+        self.navigationItem.title = [NSString stringWithFormat:@"@%@", self.user[@"screen_name"]];
+        
+        CGFloat navbarHeight = self.navigationController.navigationBar.frame.size.height;
+        CGFloat headerWidth = ScreenWidth / 2;
+        
+        UIView *customHeader = [[UIView alloc] initWithFrame:CGRectMake(0, 0, headerWidth, navbarHeight)];
+        customHeader.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 4, headerWidth, navbarHeight / 2)];
+        nameLabel.font = [UIFont boldSystemFontOfSize:16.0];
+        nameLabel.text = self.user[@"name"];
+        nameLabel.textAlignment = NSTextAlignmentCenter;
+        nameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, navbarHeight / 2, headerWidth, navbarHeight / 2)];
+        handleLabel.text = [NSString stringWithFormat:@"@%@", self.user[@"screen_name"]];
+        handleLabel.font = [UIFont fontWithName:handleLabel.font.fontName size:12.0];
+        handleLabel.textColor = [UIColor lightGrayColor];
+        handleLabel.textAlignment = NSTextAlignmentCenter;
+        handleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        
+        [customHeader addSubview:nameLabel];
+        [customHeader addSubview:handleLabel];
+        
+        self.navigationItem.titleView = customHeader;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -159,7 +181,6 @@
     return 44.0f;
 }
 
-
 - (IBAction)sendTouch:(id)sender {
     [sender setEnabled:NO];
     NSString *text = self.textView.text;
@@ -189,19 +210,18 @@
 
 - (void)addMessage:(DirectMessage *)msg {
     @synchronized (self.messages) {
-        [self.messages addObject:msg];
+        NSInteger prevCount = self.messages.count;
         
-//        NSInteger row = self.messages.count;
-//        if(row <= 0) {
+        [self.messages addObject:msg];
+
+        if(prevCount <= 0) {
             [self.tableView reloadData];
-//        } else {
-//            NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:1];
-//            [indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
-//            
-//            [self.tableView beginUpdates];
-//            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationBottom];
-//            [self.tableView endUpdates];
-//        }
+        } else {
+            NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:1];
+            [indexPaths addObject:[NSIndexPath indexPathForRow:prevCount inSection:0]];
+            
+            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationBottom];
+        }
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self scrollToBottom];
