@@ -11,6 +11,7 @@
 
 @interface MessageTableViewCell ()
 
+@property (nonatomic, retain) UIView *customView;
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @property (nonatomic, strong) UIImageView *bubbleImage;
 @property (nonatomic) BOOL isMine;
@@ -21,17 +22,17 @@
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    [self redrawBubble];
+    [self redrawBubble:NO];
 }
 
 - (void)setText:(NSString *)text isMine:(BOOL)isMine {
     self.isMine = isMine;
     self.label.text = text;
     [self.label sizeToFit];
-    [self redrawBubble];
+    [self redrawBubble:YES];
 }
 
-- (void) redrawBubble {
+- (void) redrawBubble:(BOOL)doLabel {
     if (!self.bubbleImage) {
         self.bubbleImage = [[UIImageView alloc] init];
         [self addSubview:self.bubbleImage];
@@ -48,9 +49,11 @@
     CGFloat y = 0;
     
     CGFloat left = x + insets.left;
-//    left += (self.isMine ? -4 : 4);
+    left += (self.isMine ? -4 : 4);
     
-    self.label.frame = CGRectMake(left, y + insets.top, width, height);
+    if(doLabel) {
+        self.label.frame = CGRectMake(left, y + insets.top, width, height);
+    }
     
     if (self.isMine) {
         self.bubbleImage.image = [[UIImage imageNamed:@"right_bubble.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:14];
@@ -59,9 +62,6 @@
     }
     
     self.bubbleImage.frame = CGRectMake(x, y, width + insets.left + insets.right, height + insets.top + insets.bottom);
-    
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
 }
 
 - (CGFloat)getEstimatedHeight {

@@ -25,21 +25,20 @@
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MessageTableViewCellMine" id="lBY-tl-npf" customClass="MessageTableViewCell">
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lBY-tl-npf" id="nbk-SE-yFV">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="right" tableViewCell="lBY-tl-npf" id="nbk-SE-yFV">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" placeholderIntrinsicWidth="42" placeholderIntrinsicHeight="21" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JHF-qw-0gv" customClass="MessageUILabel">
-                                                    <rect key="frame" x="550" y="12" width="42" height="21"/>
+                                                    <rect key="frame" x="545" y="12" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.92941176891326904" green="0.92941176891326904" blue="0.92941176891326904" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailingMargin" secondItem="JHF-qw-0gv" secondAttribute="trailing" priority="750" id="CBd-eN-15N"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="JHF-qw-0gv" secondAttribute="trailing" constant="5" id="CBd-eN-15N"/>
                                                 <constraint firstAttribute="centerY" secondItem="JHF-qw-0gv" secondAttribute="centerY" id="Iyy-tI-pB8"/>
-                                                <constraint firstItem="JHF-qw-0gv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nbk-SE-yFV" secondAttribute="leadingMargin" priority="750" constant="50" id="Xy7-4v-pAY"/>
-                                                <constraint firstItem="JHF-qw-0gv" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nbk-SE-yFV" secondAttribute="trailingMargin" id="nwU-N1-o6g"/>
+                                                <constraint firstItem="JHF-qw-0gv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nbk-SE-yFV" secondAttribute="leadingMargin" priority="752" constant="50" id="Xy7-4v-pAY"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -48,21 +47,20 @@
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MessageTableViewCellTheirs" id="bbT-Qc-ngK" customClass="MessageTableViewCell">
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bbT-Qc-ngK" id="IDR-6l-qa6">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" tableViewCell="bbT-Qc-ngK" id="IDR-6l-qa6">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" placeholderIntrinsicWidth="42" placeholderIntrinsicHeight="21" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ecg-WV-GqP" customClass="MessageUILabel">
-                                                    <rect key="frame" x="8" y="12" width="42" height="21"/>
+                                                    <rect key="frame" x="13" y="12" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="Ecg-WV-GqP" secondAttribute="trailing" priority="750" constant="50" id="0xa-v7-sZS"/>
+                                                <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="Ecg-WV-GqP" secondAttribute="trailing" priority="752" constant="50" id="0xa-v7-sZS"/>
                                                 <constraint firstAttribute="centerY" secondItem="Ecg-WV-GqP" secondAttribute="centerY" id="LRf-bJ-Zby"/>
-                                                <constraint firstItem="Ecg-WV-GqP" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="IDR-6l-qa6" secondAttribute="leadingMargin" id="Owx-Tj-WvW"/>
-                                                <constraint firstItem="Ecg-WV-GqP" firstAttribute="leading" secondItem="IDR-6l-qa6" secondAttribute="leadingMargin" priority="750" id="u3D-Bw-8Qv"/>
+                                                <constraint firstItem="Ecg-WV-GqP" firstAttribute="leading" secondItem="IDR-6l-qa6" secondAttribute="leadingMargin" constant="5" id="u3D-Bw-8Qv"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
