@@ -26,6 +26,7 @@
 		91DDBC821B267CE6006D7631 /* Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91DDBC811B267CE6006D7631 /* Settings@2x.png */; };
 		91DDBC851B267F88006D7631 /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91DDBC841B267F88006D7631 /* MessageTableViewCell.m */; };
 		91DDBC891B26C9E6006D7631 /* MessageUILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 91DDBC881B26C9E6006D7631 /* MessageUILabel.m */; };
+		91DDBC8D1B26D1E7006D7631 /* DirectMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 91DDBC8C1B26D1E7006D7631 /* DirectMessage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,8 @@
 		91DDBC861B26BE03006D7631 /* TwitterDM-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TwitterDM-Prefix.pch"; sourceTree = "<group>"; };
 		91DDBC871B26C9E6006D7631 /* MessageUILabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageUILabel.h; path = Views/MessageUILabel.h; sourceTree = "<group>"; };
 		91DDBC881B26C9E6006D7631 /* MessageUILabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageUILabel.m; path = Views/MessageUILabel.m; sourceTree = "<group>"; };
+		91DDBC8B1B26D1E7006D7631 /* DirectMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DirectMessage.h; path = Models/DirectMessage.h; sourceTree = "<group>"; };
+		91DDBC8C1B26D1E7006D7631 /* DirectMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DirectMessage.m; path = Models/DirectMessage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +114,7 @@
 		9183419F1B26435000A53B8A /* TwitterDM */ = {
 			isa = PBXGroup;
 			children = (
+				91DDBC8A1B26D1C3006D7631 /* Models */,
 				91DDBC781B2661A0006D7631 /* Views */,
 				918341C61B26481900A53B8A /* Assets */,
 				918341A41B26435000A53B8A /* AppDelegate.h */,
@@ -181,6 +185,15 @@
 				91DDBC881B26C9E6006D7631 /* MessageUILabel.m */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		91DDBC8A1B26D1C3006D7631 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				91DDBC8B1B26D1E7006D7631 /* DirectMessage.h */,
+				91DDBC8C1B26D1E7006D7631 /* DirectMessage.m */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -290,6 +303,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91DDBC8D1B26D1E7006D7631 /* DirectMessage.m in Sources */,
 				91DDBC7E1B267861006D7631 /* ThreadViewController.m in Sources */,
 				918341A91B26435000A53B8A /* LoginViewController.m in Sources */,
 				91DDBC851B267F88006D7631 /* MessageTableViewCell.m in Sources */,

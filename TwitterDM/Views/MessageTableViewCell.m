@@ -37,28 +37,25 @@
         [self addSubview:self.bubbleImage];
     }
     
-    UIEdgeInsets insets = UIEdgeInsetsMake(10, 16, 16, 16);
+    UIEdgeInsets insets = UIEdgeInsetsMake(10, 16, 10, 16);
     
-    CGRect paragraphRect = self.label.frame;
-    CGSize size = [self.label sizeThatFits:CGSizeMake(ScreenWidth - 50 - 8 - insets.left - insets.right, CGFLOAT_MAX)];
+    CGSize size = [self.label sizeThatFits:CGSizeMake(ScreenWidth - 50 - insets.left - insets.right, CGFLOAT_MAX)];
     
     CGFloat width = size.width;
     CGFloat height = size.height;
     
-    CGFloat x = (!self.isMine) ? 0 : self.frame.size.width - width - insets.left - insets.right;
+    CGFloat x = (self.isMine) ? self.frame.size.width - width - insets.left - insets.right : 0;
     CGFloat y = 0;
     
     CGFloat left = x + insets.left;
-    if(!self.isMine) {
-        left += 6;
-    }
+//    left += (self.isMine ? -4 : 4);
     
     self.label.frame = CGRectMake(left, y + insets.top, width, height);
     
-    if (!self.isMine) {
-        self.bubbleImage.image = [[UIImage imageNamed:@"left_bubble.png"] stretchableImageWithLeftCapWidth:21 topCapHeight:14];
-    } else {
+    if (self.isMine) {
         self.bubbleImage.image = [[UIImage imageNamed:@"right_bubble.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:14];
+    } else {
+        self.bubbleImage.image = [[UIImage imageNamed:@"left_bubble.png"] stretchableImageWithLeftCapWidth:21 topCapHeight:14];
     }
     
     self.bubbleImage.frame = CGRectMake(x, y, width + insets.left + insets.right, height + insets.top + insets.bottom);

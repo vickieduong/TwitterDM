@@ -8,12 +8,14 @@
 
 #import "ThreadViewController.h"
 #import "MessageTableViewCell.h"
+#import "DirectMessage.h"
 
 @interface ThreadViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomConstraint;
+@property (nonatomic, strong) NSMutableArray *messages;
 
 @end
 
@@ -28,6 +30,10 @@
     
     UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)];
     [self.tableView addGestureRecognizer:tapper];
+    
+    self.tableView.contentInset = UIEdgeInsetsMake(8, 0, 8, 0);
+    
+    self.messages = [[NSMutableArray alloc] init];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -58,7 +64,7 @@
 - (void)keyboardHidden:(NSNotification *)notification {
     double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
-    [self updateBottomConstraint:0 withDuraction:duration];
+    [self updateBottomConstraint:0 withDuration:duration];
 }
 
 - (void)keyboardShown:(NSNotification *)notification {
@@ -68,16 +74,24 @@
     
     double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
-    [self updateBottomConstraint:keyboardHeight withDuraction:duration];
+    [self updateBottomConstraint:keyboardHeight withDuration:duration];
 }
 
-- (void)updateBottomConstraint:(CGFloat)constant withDuraction:(double)duration {
+- (void)updateBottomConstraint:(CGFloat)constant withDuration:(double)duration {
     self.bottomConstraint.constant = constant;
     
     [UIView animateWithDuration:duration animations:^{
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
+        [self scrollToBottom];
     }];
+}
+
+- (void)scrollToBottom {
+    NSInteger index = self.messages.count - 1;
+    if(index >= 0) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
 }
 
 #pragma mark - Table view data source
@@ -87,7 +101,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    return self.messages.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -95,7 +109,9 @@
 }
 
 - (MessageTableViewCell *)basicCellAtIndexPath:(NSIndexPath *)indexPath {
-    BOOL isMine = indexPath.row % 2 == 0;
+    DirectMessage *msg = self.messages[indexPath.row];
+    BOOL isMine = msg.isMine;
+    
     NSString *reuseIdentifier = isMine ? @"MessageTableViewCellMine" : @"MessageTableViewCellTheirs";
     
     MessageTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
@@ -104,9 +120,10 @@
 }
 
 - (void)configureBasicCell:(MessageTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    BOOL isMine = indexPath.row % 2 == 0;
     
-    [cell setText:@"Hello there i love to message things on twitter this is amazing ok bye!" isMine:isMine];
+    DirectMessage *msg = self.messages[indexPath.row];
+    NSString *text = msg.text;
+    [cell setText:text isMine:msg.isMine];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -114,7 +131,8 @@
 }
 
 - (CGFloat)heightForBasicCellAtIndexPath:(NSIndexPath *)indexPath {
-    BOOL isMine = indexPath.row % 2 == 0;
+    DirectMessage *msg = self.messages[indexPath.row];
+    BOOL isMine = msg.isMine;
     
     MessageTableViewCell *sizingCell;
     if(isMine) {
@@ -143,6 +161,52 @@
 
 
 - (IBAction)sendTouch:(id)sender {
+    [sender setEnabled:NO];
+    NSString *text = self.textView.text;
+    NSString *trimmed = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    if(![trimmed isEqualToString:@""]) {
+        DirectMessage *msg = [[DirectMessage alloc] init];
+        msg.text = trimmed;
+        msg.isMine = YES;
+        msg.date = [NSDate date];
+        
+        [self addMessage:msg];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            DirectMessage *msg = [[DirectMessage alloc] init];
+            msg.text = [trimmed stringByAppendingString:[NSString stringWithFormat:@" %@", trimmed]];
+            msg.isMine = NO;
+            msg.date = [NSDate date];
+            
+            [self addMessage:msg];
+        });
+        
+        self.textView.text = @"";
+    }
+    [sender setEnabled:YES];
+}
+
+- (void)addMessage:(DirectMessage *)msg {
+    @synchronized (self.messages) {
+        [self.messages addObject:msg];
+        
+//        NSInteger row = self.messages.count;
+//        if(row <= 0) {
+            [self.tableView reloadData];
+//        } else {
+//            NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:1];
+//            [indexPaths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
+//            
+//            [self.tableView beginUpdates];
+//            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationBottom];
+//            [self.tableView endUpdates];
+//        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self scrollToBottom];
+        });
+    }
 }
 
 @end
