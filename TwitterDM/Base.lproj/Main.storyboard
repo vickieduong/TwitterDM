@@ -272,7 +272,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Please login to Twitter in your iPhone Settings" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Cd-4p-QqT" userLabel="fullname">
-                                            <rect key="frame" x="8" y="24" width="300" height="20"/>
+                                            <rect key="frame" x="150" y="24" width="300" height="20"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="583-NK-Qqb"/>
@@ -301,8 +301,8 @@
                                         <constraint firstItem="DdP-K9-qPg" firstAttribute="top" secondItem="0Cd-4p-QqT" secondAttribute="bottom" constant="16" id="6KO-VC-eDP"/>
                                         <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="DdP-K9-qPg" secondAttribute="bottom" constant="16" id="AhR-PE-ozK"/>
                                         <constraint firstItem="DdP-K9-qPg" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gvw-nh-mzN" secondAttribute="leadingMargin" constant="16" id="PfK-0g-BlL"/>
+                                        <constraint firstAttribute="centerX" secondItem="0Cd-4p-QqT" secondAttribute="centerX" id="Qzb-0C-3yv"/>
                                         <constraint firstItem="0Cd-4p-QqT" firstAttribute="top" secondItem="gvw-nh-mzN" secondAttribute="topMargin" constant="16" id="r5a-6h-jCb"/>
-                                        <constraint firstItem="0Cd-4p-QqT" firstAttribute="leading" secondItem="gvw-nh-mzN" secondAttribute="leadingMargin" id="tcl-AR-Idh"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -367,6 +367,6 @@
     </scenes>
     <resources>
         <image name="Settings.png" width="22" height="22"/>
-        <image name="instructions.png" width="320" height="395"/>
+        <image name="instructions.png" width="220" height="272"/>
     </resources>
 </document>
