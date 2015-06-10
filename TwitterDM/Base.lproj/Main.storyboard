@@ -317,7 +317,7 @@
         <!--Navigation Controller-->
         <scene sceneID="TCc-ep-4g8">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="9dg-rX-Bpu" sceneMemberID="viewController">
+                <navigationController id="9dg-rX-Bpu" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Hp7-pF-07D">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

@@ -16,10 +16,21 @@
 
 @interface MessagesTableViewController ()
 
+typedef enum ScrollDirection {
+    ScrollDirectionNone,
+    ScrollDirectionRight,
+    ScrollDirectionLeft,
+    ScrollDirectionUp,
+    ScrollDirectionDown,
+    ScrollDirectionCrazy,
+} ScrollDirection;
+
 @property (nonatomic, strong) NSMutableDictionary *data;
 @property (nonatomic, strong) NSMutableDictionary *imageCache;
+@property (nonatomic, strong) NSMutableArray *ids;
 @property (nonatomic, strong) NSMutableArray *users;
 @property (nonatomic) BOOL infiniteLoading;
+@property (nonatomic) BOOL loadingUsers;
 @property (nonatomic) BOOL endOfFeed;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *switchAccountsBarButtonItem;
 @property (nonatomic, strong) NSArray *accounts;
@@ -27,6 +38,8 @@
 
 @property (nonatomic) BOOL loading;
 @property (nonatomic, strong) UIActivityIndicatorView *spinner;
+@property (nonatomic) CGFloat lastContentOffset;
+@property (nonatomic) ScrollDirection scrollDirection;
 
 @end
 
@@ -37,6 +50,7 @@
     
     self.data = [[NSMutableDictionary alloc] init];
     self.users = [[NSMutableArray alloc] init];
+    self.ids = [[NSMutableArray alloc] init];
     self.imageCache = [[NSMutableDictionary alloc] init];
     
     [self.tableView setContentInset:UIEdgeInsetsZero];
@@ -114,13 +128,21 @@
         
         [self.data removeAllObjects];
         [self.users removeAllObjects];
+        [self.ids removeAllObjects];
         
         [self.tableView reloadData];
         
         if(twitterAccount) {
             [self.spinner startAnimating];
             
-            SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/followers/list.json?"] parameters:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@", self.twitterAccount.username], @"screen_name", @"-1", @"cursor", nil]];
+            SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
+                                                               requestMethod:SLRequestMethodGET
+                                                                         URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/followers/ids.json?"]
+                                                                  parameters:@{
+                                                                               @"screen_name" : self.twitterAccount.username,
+                                                                               @"cursor": @"-1"
+                                                                               }
+                                             ];
             [twitterInfoRequest setAccount:self.twitterAccount];
             [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
                 [self handleTwitterResponse:responseData urlResponse:urlResponse error:error];
@@ -133,38 +155,98 @@
     });
 }
 
-- (void)handleTwitterResponse:(NSData*)responseData urlResponse:(NSHTTPURLResponse *)urlResponse error:(NSError *)error {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.loading = NO;
-        [self.spinner stopAnimating];
+- (void)loadUsersBatch {
+    if(!self.loadingUsers) {
+        self.loadingUsers = YES;
         
-        // Check if we reached the rate limit
-        if ([urlResponse statusCode] == 429) {
-            NSLog(@"Rate limit reached");
-            return;
+        NSLog(@"loading next user batch users:%d ids:%d", self.users.count, self.ids.count);
+        
+        NSArray *idSet;
+        @synchronized(self.ids) {
+            NSRange range = NSMakeRange(0, 100);
+            idSet = [self.ids subarrayWithRange:range];
+            [self.ids removeObjectsInRange:range];
         }
-        // Check if there was an error
-        if (error) {
-            NSLog(@"Error: %@", error.localizedDescription);
-            return;
-        }
-        // Check if there is some response data
-        if (responseData) {
-            NSError *error = nil;
-            NSDictionary *TWData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&error];
-            
-            [self.data addEntriesFromDictionary:TWData];
-            
-            if([self.data objectForKey:@"users"] && [[self.data objectForKey:@"users"] isKindOfClass:[NSArray class]]) {
-                [self.users addObjectsFromArray:self.data[@"users"]];
+        SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
+                                                           requestMethod:SLRequestMethodGET
+                                                                     URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/users/lookup.json?"]
+                                                              parameters:@{
+                                                                           @"user_id": [idSet componentsJoinedByString:@","]
+                                                                           }
+                                         ];
+        [twitterInfoRequest setAccount:self.twitterAccount];
+        [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+            [self handleTwitterUserResponse:responseData urlResponse:urlResponse error:error];
+        }];
+    }
+}
+
+- (void)handleTwitterUserResponse:(NSData*)responseData urlResponse:(NSHTTPURLResponse *)urlResponse error:(NSError *)error {
+    // Check if we reached the rate limit
+    if ([urlResponse statusCode] == 429) {
+        NSLog(@"Rate limit reached");
+        return;
+    }
+    // Check if there was an error
+    if (error) {
+        NSLog(@"Error: %@", error.localizedDescription);
+        return;
+    }
+    // Check if there is some response data
+    if (responseData) {
+        NSError *error = nil;
+        NSArray *TWData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&error];
+        
+        if([TWData isKindOfClass:[NSArray class]]) {
+            @synchronized(self.users) {
+                [self.users addObjectsFromArray:TWData];
             }
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.loading = NO;
+            self.loadingUsers = NO;
+            [self.spinner stopAnimating];
+            
             [self.tableView reloadData];
-            
-            if([self.data[@"next_cursor_str"] isEqualToString:@"0"]) {
-                self.endOfFeed = YES;
+        });
+    }
+}
+
+- (void)handleTwitterResponse:(NSData*)responseData urlResponse:(NSHTTPURLResponse *)urlResponse error:(NSError *)error {
+    // Check if we reached the rate limit
+    if ([urlResponse statusCode] == 429) {
+        NSLog(@"Rate limit reached");
+        return;
+    }
+    // Check if there was an error
+    if (error) {
+        NSLog(@"Error: %@", error.localizedDescription);
+        return;
+    }
+    // Check if there is some response data
+    if (responseData) {
+        NSError *error = nil;
+        NSDictionary *TWData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&error];
+        
+        [self.data addEntriesFromDictionary:TWData];
+        
+        // for followers/list endpoint (not using, only fetches 20 at a time, rate limit reached)
+        //            if([self.data objectForKey:@"users"] && [[self.data objectForKey:@"users"] isKindOfClass:[NSArray class]]) {
+        //                [self.users addObjectsFromArray:self.data[@"users"]];
+        //            }
+        
+        // for followers/ids endpoint (fetches 5000 at a time, use with users/lookup - 100 at a time)
+        if([self.data objectForKey:@"ids"] && [[self.data objectForKey:@"ids"] isKindOfClass:[NSArray class]]) {
+            @synchronized(self.ids) {
+                [self.ids addObjectsFromArray:self.data[@"ids"]];
             }
+            [self loadUsersBatch];
         }
-    });
+        
+        if([self.data[@"next_cursor_str"] isEqualToString:@"0"]) {
+            self.endOfFeed = YES;
+        }
+    }
 }
 
 #pragma mark - Table view data source
@@ -230,6 +312,9 @@
         cell.fullNameLabel.text = user[@"name"];
         cell.handleLabel.text = username;
         
+        // Get a copy of this user's username to compare against when the image is done downloading
+        NSString *usernameCopy = [username copy];
+        
         NSString *urlString = user[@"profile_image_url_https"];
         if([self.imageCache objectForKey:urlString]) {
             UIImage *image = [self.imageCache objectForKey:urlString];
@@ -243,12 +328,20 @@
                     UIImage *image = [UIImage imageWithData:data];
                     [self.imageCache setObject:image forKey:urlString];
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self fadeInImage:image inImageView:cell.thumbnail];
+                        // Check if cell's user is the same (since we're reusing table cells)
+                        if([cell.user[@"screen_name"] isEqualToString:usernameCopy]) {
+                            [self fadeInImage:image inImageView:cell.thumbnail];
+                        }
                     });
                 } else {
                     cell.thumbnail.backgroundColor = [UIColor lightGrayColor];
                 }
             }];
+        }
+        
+        // Check if we are 50(ish) rows from the bottom, if yes, fetch the next batch of 100 users from the user ids
+        if(self.scrollDirection == ScrollDirectionDown && indexPath.row >= self.users.count - 50) {
+            [self loadUsersBatch];
         }
         
         return cell;
@@ -285,6 +378,16 @@
     if(!self.endOfFeed && !self.infiniteLoading && self.tableView.contentSize.height > self.tableView.frame.size.height && scrollView.contentOffset.y > self.tableView.contentSize.height - (self.tableView.frame.size.height * 2)) {
         [self callInfiniteLoadRequest];
     }
+    
+    ScrollDirection scrollDirection;
+    if (self.lastContentOffset > scrollView.contentOffset.y)
+        scrollDirection = ScrollDirectionUp;
+    else if (self.lastContentOffset < scrollView.contentOffset.y)
+        scrollDirection = ScrollDirectionDown;
+    
+    self.lastContentOffset = scrollView.contentOffset.y;
+    
+    self.scrollDirection = scrollDirection;
 }
 
 - (void)callInfiniteLoadRequest {
@@ -292,7 +395,7 @@
     
     SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
                                                        requestMethod:SLRequestMethodGET
-                                                                 URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/followers/list.json?"]
+                                                                 URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/followers/ids.json?"]
                                                           parameters:@{
                                                                        @"screen_name" : self.twitterAccount.username,
                                                                        @"cursor": self.data[@"next_cursor_str"]
