@@ -225,13 +225,13 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="@" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uuc-3e-WXY">
-                                            <rect key="frame" x="58" y="43" width="10" height="15"/>
+                                            <rect key="frame" x="58" y="36" width="10" height="15"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="999" text="username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mga-gj-p7L">
-                                            <rect key="frame" x="68" y="43" width="491" height="15"/>
+                                            <rect key="frame" x="68" y="36" width="491" height="15"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -243,21 +243,13 @@
                                         <constraint firstAttribute="centerY" secondItem="yrd-5u-VBP" secondAttribute="centerY" id="Gr2-zW-3JG"/>
                                         <constraint firstItem="mga-gj-p7L" firstAttribute="leading" secondItem="uuc-3e-WXY" secondAttribute="trailing" id="I2E-yN-hJO"/>
                                         <constraint firstItem="mga-gj-p7L" firstAttribute="centerY" secondItem="uuc-3e-WXY" secondAttribute="centerY" id="M9p-BT-yHx"/>
-                                        <constraint firstItem="db2-JC-CWI" firstAttribute="centerY" secondItem="uuc-3e-WXY" secondAttribute="centerY" id="Mhg-ne-1Wm"/>
                                         <constraint firstItem="yrd-5u-VBP" firstAttribute="top" secondItem="db2-JC-CWI" secondAttribute="top" constant="-1" id="OEX-3o-FVI"/>
                                         <constraint firstItem="db2-JC-CWI" firstAttribute="leading" secondItem="uuc-3e-WXY" secondAttribute="leading" id="WYc-Mc-q6a"/>
                                         <constraint firstItem="yrd-5u-VBP" firstAttribute="leading" secondItem="G3m-2X-UDL" secondAttribute="leadingMargin" id="Xw6-aq-orb"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="mga-gj-p7L" secondAttribute="trailing" id="bu3-uA-hkR"/>
-                                        <constraint firstItem="yrd-5u-VBP" firstAttribute="bottom" secondItem="uuc-3e-WXY" secondAttribute="bottom" id="e9T-Lz-zQK"/>
-                                        <constraint firstItem="uuc-3e-WXY" firstAttribute="leading" secondItem="db2-JC-CWI" secondAttribute="trailing" constant="8" id="oWe-pC-yui"/>
                                         <constraint firstItem="yrd-5u-VBP" firstAttribute="top" secondItem="G3m-2X-UDL" secondAttribute="topMargin" constant="8" id="swu-tD-KKh"/>
+                                        <constraint firstItem="uuc-3e-WXY" firstAttribute="top" secondItem="db2-JC-CWI" secondAttribute="bottom" constant="2" id="zIa-sU-azh"/>
                                     </constraints>
-                                    <variation key="default">
-                                        <mask key="constraints">
-                                            <exclude reference="Mhg-ne-1Wm"/>
-                                            <exclude reference="oWe-pC-yui"/>
-                                        </mask>
-                                    </variation>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="fullNameLabel" destination="db2-JC-CWI" id="b9d-PG-fXG"/>
