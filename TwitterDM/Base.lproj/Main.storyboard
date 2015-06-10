@@ -168,20 +168,14 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="FMh-pD-JCe" firstAttribute="leading" secondItem="8Tv-MG-2HZ" secondAttribute="leading" id="0DM-tF-C9h"/>
                             <constraint firstItem="FMh-pD-JCe" firstAttribute="top" secondItem="8Tv-MG-2HZ" secondAttribute="bottom" id="5xK-pr-eSd"/>
-                            <constraint firstItem="8Tv-MG-2HZ" firstAttribute="leading" secondItem="yRc-59-mPs" secondAttribute="leadingMargin" constant="-16" id="9W7-0p-a4f"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="FMh-pD-JCe" secondAttribute="trailing" constant="-16" id="Bkg-6e-Wv0"/>
                             <constraint firstItem="8Tv-MG-2HZ" firstAttribute="top" secondItem="W8p-vI-NAg" secondAttribute="bottom" constant="-64" id="Hsl-Zv-IKp"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="8Tv-MG-2HZ" secondAttribute="trailing" constant="-16" id="T9J-p8-xCx"/>
+                            <constraint firstItem="8Tv-MG-2HZ" firstAttribute="width" secondItem="yRc-59-mPs" secondAttribute="width" id="LiR-V3-1Hn"/>
                             <constraint firstItem="TuX-RP-Ukv" firstAttribute="top" secondItem="FMh-pD-JCe" secondAttribute="bottom" id="UzS-n3-afs"/>
-                            <constraint firstItem="FMh-pD-JCe" firstAttribute="leading" secondItem="yRc-59-mPs" secondAttribute="leadingMargin" constant="-16" id="fb8-rm-yza"/>
-                            <constraint firstItem="8Tv-MG-2HZ" firstAttribute="top" secondItem="W8p-vI-NAg" secondAttribute="bottom" constant="-62" id="jXk-KY-vKn"/>
+                            <constraint firstItem="8Tv-MG-2HZ" firstAttribute="leading" secondItem="yRc-59-mPs" secondAttribute="leading" id="WeU-x8-tv4"/>
+                            <constraint firstItem="FMh-pD-JCe" firstAttribute="width" secondItem="8Tv-MG-2HZ" secondAttribute="width" id="o7O-vw-LOM"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="jXk-KY-vKn"/>
-                            </mask>
-                        </variation>
                     </view>
                     <connections>
                         <outlet property="bottomConstraint" destination="UzS-n3-afs" id="rCz-xS-LRV"/>
@@ -220,7 +214,7 @@
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="253" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="db2-JC-CWI" userLabel="fullname">
                                             <rect key="frame" x="58" y="17" width="37" height="17"/>
-                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
