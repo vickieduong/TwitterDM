@@ -53,9 +53,9 @@
     
     self.tableView.alwaysBounceVertical = NO;
     
-    self.spinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-    self.spinner.center = self.tableView.center;
-    [self.tableView addSubview:self.spinner];
+    self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    self.spinner.center = self.view.center;
+    [self.view addSubview:self.spinner];
     
     self.loading = YES;
     [self.spinner startAnimating];
@@ -63,33 +63,38 @@
 }
 
 - (void)twitterAccountsUpdated {
-    ACAccountStore *accountStore = [[ACAccountStore alloc] init];
-    ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-    [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error){
-        if (granted) {
-            self.accounts = [accountStore accountsWithAccountType:accountType];
-            // Check if the users has setup at least one Twitter account
-            if (self.accounts.count > 0)
-            {
-                [self dismissViewControllerAnimated:NO completion:nil];
-                
-                if(self.accounts.count > 1) {
-                    self.switchAccountsBarButtonItem.enabled = YES;
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        ACAccountStore *accountStore = [[ACAccountStore alloc] init];
+        ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+        [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error){
+            if (granted) {
+                self.accounts = [accountStore accountsWithAccountType:accountType];
+                // Check if the users has setup at least one Twitter account
+                if (self.accounts.count > 0)
+                {
+                    dispatch_sync(dispatch_get_main_queue(), ^{
+                        if(self.accounts.count > 1) {
+                            self.switchAccountsBarButtonItem.enabled = YES;
+                        } else {
+                            self.switchAccountsBarButtonItem.enabled = NO;
+                        }
+                    });
+                    
+                    if(!self.lastUsername || ![self.twitterAccount.username isEqualToString:self.lastUsername] || ![self.accounts containsObject:self.twitterAccount]) {
+                        self.twitterAccount = [self.accounts firstObject];
+                    }
                 } else {
-                    self.switchAccountsBarButtonItem.enabled = NO;
-                }
-                
-                if(!self.lastUsername || ![self.twitterAccount.username isEqualToString:self.lastUsername] || ![self.accounts containsObject:self.twitterAccount]) {
-                    self.twitterAccount = [self.accounts firstObject];
+                    self.twitterAccount = nil;
                 }
             } else {
+                self.accounts = nil;
                 self.twitterAccount = nil;
-                //                [self presentLogin];
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    [[[UIAlertView alloc] initWithTitle:@"Oops!" message:@"We need permission to access your Twitter accounts. Please enable in your Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                });
             }
-        } else {
-            [[[UIAlertView alloc] initWithTitle:@"Oops!" message:@"We need permission to access your Twitter accounts. Please enable in your Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-        }
-    }];
+        }];
+    });
 }
 
 - (void)didReceiveMemoryWarning {
@@ -98,31 +103,34 @@
 }
 
 - (void)setTwitterAccount:(ACAccount *)twitterAccount {
-    _twitterAccount = twitterAccount;
-    
-    _lastUsername = twitterAccount.username;
-    
-    _endOfFeed = NO;
-    
-    [self.data removeAllObjects];
-    [self.users removeAllObjects];
-    
-    [self.tableView reloadData];
-    
-    if(twitterAccount) {
-        self.loading = YES;
-        [self.spinner startAnimating];
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        _twitterAccount = twitterAccount;
         
-        SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/followers/list.json?"] parameters:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@", self.twitterAccount.username], @"screen_name", @"-1", @"cursor", nil]];
-        [twitterInfoRequest setAccount:self.twitterAccount];
-        [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-            [self handleTwitterResponse:responseData urlResponse:urlResponse error:error];
-        }];
-    } else {
-        self.loading = NO;
-        [self.spinner stopAnimating];
+        _lastUsername = twitterAccount.username;
+        
+        _endOfFeed = NO;
+        
+        self.loading = YES;
+        
+        [self.data removeAllObjects];
+        [self.users removeAllObjects];
+        
         [self.tableView reloadData];
-    }
+        
+        if(twitterAccount) {
+            [self.spinner startAnimating];
+            
+            SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/followers/list.json?"] parameters:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@", self.twitterAccount.username], @"screen_name", @"-1", @"cursor", nil]];
+            [twitterInfoRequest setAccount:self.twitterAccount];
+            [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+                [self handleTwitterResponse:responseData urlResponse:urlResponse error:error];
+            }];
+        } else {
+            self.loading = NO;
+            [self.spinner stopAnimating];
+            [self.tableView reloadData];
+        }
+    });
 }
 
 - (void)handleTwitterResponse:(NSData*)responseData urlResponse:(NSHTTPURLResponse *)urlResponse error:(NSError *)error {
@@ -199,9 +207,8 @@
         CGFloat statusBarHeight = ([UIApplication sharedApplication].statusBarFrame.size.height);
         CGFloat navigationBarHeight = (self.navigationController.navigationBar.bounds.size.height);
         CGFloat topBarHeight = statusBarHeight + navigationBarHeight;
-
+        
         CGFloat height = self.tableView.frame.size.height - topBarHeight;
-        NSLog(@"%f", height);
         return height;
     } else {
         return 75.0;

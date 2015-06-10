@@ -281,7 +281,7 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="instructions.png" translatesAutoresizingMaskIntoConstraints="NO" id="DdP-K9-qPg">
+                                        <imageView autoresizesSubviews="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="instructions.png" translatesAutoresizingMaskIntoConstraints="NO" id="DdP-K9-qPg">
                                             <rect key="frame" x="190" y="60" width="220" height="272"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="220" id="2fz-xe-7Qv"/>
