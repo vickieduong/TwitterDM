@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+@import Accounts;
+#import "AccountsTableViewController.h"
 
-@interface MessagesTableViewController : UITableViewController
+@interface MessagesTableViewController : UITableViewController <AccountsTableViewControllerDelegate>
+
+@property (nonatomic, strong) ACAccount *twitterAccount;
 
 @end

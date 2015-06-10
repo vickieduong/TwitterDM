@@ -9,18 +9,27 @@
 /* Begin PBXBuildFile section */
 		918341A31B26435000A53B8A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 918341A21B26435000A53B8A /* main.m */; };
 		918341A61B26435000A53B8A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 918341A51B26435000A53B8A /* AppDelegate.m */; };
-		918341A91B26435000A53B8A /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 918341A81B26435000A53B8A /* LoginViewController.m */; };
 		918341AC1B26435000A53B8A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 918341AA1B26435000A53B8A /* Main.storyboard */; };
 		918341AE1B26435000A53B8A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 918341AD1B26435000A53B8A /* Images.xcassets */; };
 		918341B11B26435000A53B8A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 918341AF1B26435000A53B8A /* LaunchScreen.xib */; };
 		918341BD1B26435000A53B8A /* TwitterDMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 918341BC1B26435000A53B8A /* TwitterDMTests.m */; };
 		918341D61B264A2D00A53B8A /* MessagesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 918341D41B264A2D00A53B8A /* MessagesTableViewController.m */; };
+		91AE3EF61B27926B004B0CB8 /* left_bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EEE1B27926B004B0CB8 /* left_bubble.png */; };
+		91AE3EF71B27926B004B0CB8 /* left_bubble@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EEF1B27926B004B0CB8 /* left_bubble@2x.png */; };
+		91AE3EF81B27926B004B0CB8 /* right_bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EF01B27926B004B0CB8 /* right_bubble.png */; };
+		91AE3EF91B27926B004B0CB8 /* right_bubble@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EF11B27926B004B0CB8 /* right_bubble@2x.png */; };
+		91AE3EFA1B27926B004B0CB8 /* Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EF21B27926B004B0CB8 /* Settings.png */; };
+		91AE3EFB1B27926B004B0CB8 /* Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EF31B27926B004B0CB8 /* Settings@2x.png */; };
+		91AE3F021B27AFAB004B0CB8 /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EFE1B27AFAB004B0CB8 /* bg.png */; };
+		91AE3F031B27AFAB004B0CB8 /* bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EFF1B27AFAB004B0CB8 /* bg@2x.png */; };
+		91AE3F041B27AFAB004B0CB8 /* instructions.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3F001B27AFAB004B0CB8 /* instructions.png */; };
+		91AE3F051B27AFAB004B0CB8 /* instructions@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3F011B27AFAB004B0CB8 /* instructions@2x.png */; };
+		91AE3F081B27BB17004B0CB8 /* EmptyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91AE3F071B27BB17004B0CB8 /* EmptyTableViewCell.m */; };
 		91DDBC7B1B2661C4006D7631 /* TwitterHandleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91DDBC7A1B2661C4006D7631 /* TwitterHandleTableViewCell.m */; };
 		91DDBC7E1B267861006D7631 /* ThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91DDBC7D1B267861006D7631 /* ThreadViewController.m */; };
 		91DDBC851B267F88006D7631 /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91DDBC841B267F88006D7631 /* MessageTableViewCell.m */; };
 		91DDBC891B26C9E6006D7631 /* MessageUILabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 91DDBC881B26C9E6006D7631 /* MessageUILabel.m */; };
 		91DDBC8D1B26D1E7006D7631 /* DirectMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 91DDBC8C1B26D1E7006D7631 /* DirectMessage.m */; };
-		91DDBC8F1B2786D7006D7631 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = 91DDBC8E1B2786D7006D7631 /* Assets */; };
 		91DDBC921B278EDA006D7631 /* AccountsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 91DDBC911B278EDA006D7631 /* AccountsTableViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -40,8 +49,6 @@
 		918341A21B26435000A53B8A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		918341A41B26435000A53B8A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		918341A51B26435000A53B8A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		918341A71B26435000A53B8A /* LoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		918341A81B26435000A53B8A /* LoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		918341AB1B26435000A53B8A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		918341AD1B26435000A53B8A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		918341B01B26435000A53B8A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -50,6 +57,18 @@
 		918341BC1B26435000A53B8A /* TwitterDMTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TwitterDMTests.m; sourceTree = "<group>"; };
 		918341D31B264A2D00A53B8A /* MessagesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesTableViewController.h; sourceTree = "<group>"; };
 		918341D41B264A2D00A53B8A /* MessagesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesTableViewController.m; sourceTree = "<group>"; };
+		91AE3EEE1B27926B004B0CB8 /* left_bubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = left_bubble.png; path = Assets/left_bubble.png; sourceTree = "<group>"; };
+		91AE3EEF1B27926B004B0CB8 /* left_bubble@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "left_bubble@2x.png"; path = "Assets/left_bubble@2x.png"; sourceTree = "<group>"; };
+		91AE3EF01B27926B004B0CB8 /* right_bubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = right_bubble.png; path = Assets/right_bubble.png; sourceTree = "<group>"; };
+		91AE3EF11B27926B004B0CB8 /* right_bubble@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "right_bubble@2x.png"; path = "Assets/right_bubble@2x.png"; sourceTree = "<group>"; };
+		91AE3EF21B27926B004B0CB8 /* Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Settings.png; path = Assets/Settings.png; sourceTree = "<group>"; };
+		91AE3EF31B27926B004B0CB8 /* Settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Settings@2x.png"; path = "Assets/Settings@2x.png"; sourceTree = "<group>"; };
+		91AE3EFE1B27AFAB004B0CB8 /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bg.png; path = Assets/bg.png; sourceTree = "<group>"; };
+		91AE3EFF1B27AFAB004B0CB8 /* bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg@2x.png"; path = "Assets/bg@2x.png"; sourceTree = "<group>"; };
+		91AE3F001B27AFAB004B0CB8 /* instructions.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = instructions.png; path = Assets/instructions.png; sourceTree = "<group>"; };
+		91AE3F011B27AFAB004B0CB8 /* instructions@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "instructions@2x.png"; path = "Assets/instructions@2x.png"; sourceTree = "<group>"; };
+		91AE3F061B27BB17004B0CB8 /* EmptyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmptyTableViewCell.h; path = Views/EmptyTableViewCell.h; sourceTree = "<group>"; };
+		91AE3F071B27BB17004B0CB8 /* EmptyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmptyTableViewCell.m; path = Views/EmptyTableViewCell.m; sourceTree = "<group>"; };
 		91DDBC791B2661C4006D7631 /* TwitterHandleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterHandleTableViewCell.h; path = Views/TwitterHandleTableViewCell.h; sourceTree = "<group>"; };
 		91DDBC7A1B2661C4006D7631 /* TwitterHandleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterHandleTableViewCell.m; path = Views/TwitterHandleTableViewCell.m; sourceTree = "<group>"; };
 		91DDBC7C1B267861006D7631 /* ThreadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadViewController.h; sourceTree = "<group>"; };
@@ -61,7 +80,6 @@
 		91DDBC881B26C9E6006D7631 /* MessageUILabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageUILabel.m; path = Views/MessageUILabel.m; sourceTree = "<group>"; };
 		91DDBC8B1B26D1E7006D7631 /* DirectMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DirectMessage.h; path = Models/DirectMessage.h; sourceTree = "<group>"; };
 		91DDBC8C1B26D1E7006D7631 /* DirectMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DirectMessage.m; path = Models/DirectMessage.m; sourceTree = "<group>"; };
-		91DDBC8E1B2786D7006D7631 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
 		91DDBC901B278EDA006D7631 /* AccountsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountsTableViewController.h; sourceTree = "<group>"; };
 		91DDBC911B278EDA006D7631 /* AccountsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountsTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -105,13 +123,11 @@
 		9183419F1B26435000A53B8A /* TwitterDM */ = {
 			isa = PBXGroup;
 			children = (
-				91DDBC8E1B2786D7006D7631 /* Assets */,
+				91AE3EEB1B27924F004B0CB8 /* Assets */,
 				91DDBC8A1B26D1C3006D7631 /* Models */,
 				91DDBC781B2661A0006D7631 /* Views */,
 				918341A41B26435000A53B8A /* AppDelegate.h */,
 				918341A51B26435000A53B8A /* AppDelegate.m */,
-				918341A71B26435000A53B8A /* LoginViewController.h */,
-				918341A81B26435000A53B8A /* LoginViewController.m */,
 				918341D31B264A2D00A53B8A /* MessagesTableViewController.h */,
 				918341D41B264A2D00A53B8A /* MessagesTableViewController.m */,
 				91DDBC901B278EDA006D7631 /* AccountsTableViewController.h */,
@@ -153,10 +169,29 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		91AE3EEB1B27924F004B0CB8 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				91AE3EFE1B27AFAB004B0CB8 /* bg.png */,
+				91AE3EFF1B27AFAB004B0CB8 /* bg@2x.png */,
+				91AE3F001B27AFAB004B0CB8 /* instructions.png */,
+				91AE3F011B27AFAB004B0CB8 /* instructions@2x.png */,
+				91AE3EEE1B27926B004B0CB8 /* left_bubble.png */,
+				91AE3EEF1B27926B004B0CB8 /* left_bubble@2x.png */,
+				91AE3EF01B27926B004B0CB8 /* right_bubble.png */,
+				91AE3EF11B27926B004B0CB8 /* right_bubble@2x.png */,
+				91AE3EF21B27926B004B0CB8 /* Settings.png */,
+				91AE3EF31B27926B004B0CB8 /* Settings@2x.png */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
 		91DDBC781B2661A0006D7631 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				91DDBC791B2661C4006D7631 /* TwitterHandleTableViewCell.h */,
+				91AE3F061B27BB17004B0CB8 /* EmptyTableViewCell.h */,
+				91AE3F071B27BB17004B0CB8 /* EmptyTableViewCell.m */,
 				91DDBC7A1B2661C4006D7631 /* TwitterHandleTableViewCell.m */,
 				91DDBC831B267F88006D7631 /* MessageTableViewCell.h */,
 				91DDBC841B267F88006D7631 /* MessageTableViewCell.m */,
@@ -255,9 +290,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91AE3F051B27AFAB004B0CB8 /* instructions@2x.png in Resources */,
+				91AE3EFA1B27926B004B0CB8 /* Settings.png in Resources */,
+				91AE3EF61B27926B004B0CB8 /* left_bubble.png in Resources */,
+				91AE3F041B27AFAB004B0CB8 /* instructions.png in Resources */,
+				91AE3F021B27AFAB004B0CB8 /* bg.png in Resources */,
 				918341AC1B26435000A53B8A /* Main.storyboard in Resources */,
-				91DDBC8F1B2786D7006D7631 /* Assets in Resources */,
+				91AE3EF91B27926B004B0CB8 /* right_bubble@2x.png in Resources */,
 				918341B11B26435000A53B8A /* LaunchScreen.xib in Resources */,
+				91AE3EF81B27926B004B0CB8 /* right_bubble.png in Resources */,
+				91AE3EF71B27926B004B0CB8 /* left_bubble@2x.png in Resources */,
+				91AE3F031B27AFAB004B0CB8 /* bg@2x.png in Resources */,
+				91AE3EFB1B27926B004B0CB8 /* Settings@2x.png in Resources */,
 				918341AE1B26435000A53B8A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,10 +322,10 @@
 			files = (
 				91DDBC8D1B26D1E7006D7631 /* DirectMessage.m in Sources */,
 				91DDBC7E1B267861006D7631 /* ThreadViewController.m in Sources */,
-				918341A91B26435000A53B8A /* LoginViewController.m in Sources */,
 				91DDBC921B278EDA006D7631 /* AccountsTableViewController.m in Sources */,
 				91DDBC851B267F88006D7631 /* MessageTableViewCell.m in Sources */,
 				918341A61B26435000A53B8A /* AppDelegate.m in Sources */,
+				91AE3F081B27BB17004B0CB8 /* EmptyTableViewCell.m in Sources */,
 				918341A31B26435000A53B8A /* main.m in Sources */,
 				91DDBC7B1B2661C4006D7631 /* TwitterHandleTableViewCell.m in Sources */,
 				91DDBC891B26C9E6006D7631 /* MessageUILabel.m in Sources */,

@@ -7,6 +7,8 @@
 //
 
 #import "AccountsTableViewController.h"
+#import "TwitterHandleTableViewCell.h"
+#import "MessagesTableViewController.h"
 
 @interface AccountsTableViewController ()
 
@@ -16,6 +18,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(backTouch)];
+    self.navigationItem.leftBarButtonItem = cancel;
 }
 
 #pragma mark - Table view data source
@@ -28,24 +33,27 @@
     return self.accounts.count;
 }
 
-/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    TwitterHandleTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TwitterHandleTableViewCell" forIndexPath:indexPath];
     
-    // Configure the cell...
+    ACAccount *user = [self.accounts objectAtIndex:indexPath.row];
+    cell.handleLabel.text = user.username;
     
     return cell;
 }
-*/
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    ACAccount *account = [self.accounts objectAtIndex:indexPath.row];
+    
+    if(self.delegate) {
+        [self.delegate setTwitterAccount:account];
+    }
+    
+    [self backTouch];
 }
-*/
+
+- (void)backTouch {
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+}
 
 @end

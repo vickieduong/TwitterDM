@@ -7,9 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+@import Accounts;
+
+@protocol AccountsTableViewControllerDelegate <NSObject>
+
+- (void)setTwitterAccount:(ACAccount *)account;
+
+@end
 
 @interface AccountsTableViewController : UITableViewController
 
 @property (nonatomic, strong) NSArray *accounts;
+@property (nonatomic, weak) id<AccountsTableViewControllerDelegate> delegate;
 
 @end
