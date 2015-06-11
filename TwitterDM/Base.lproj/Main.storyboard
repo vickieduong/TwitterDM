@@ -261,7 +261,7 @@
                                     <segue destination="CDg-4F-jC4" kind="show" id="YeS-fA-ZJo"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EmptyTableViewCell" rowHeight="400" id="V8R-1A-pdZ" customClass="EmptyTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="EmptyTableViewCell" rowHeight="360" id="V8R-1A-pdZ" customClass="EmptyTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="V8R-1A-pdZ" id="gvw-nh-mzN">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -301,6 +301,28 @@
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="ErrorTableViewCell" rowHeight="44" id="IUs-Pn-5Pl">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IUs-Pn-5Pl" id="Gdz-l8-cAx">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="There was an error. Please try again." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lj4-G6-DiR" userLabel="fullname">
+                                            <rect key="frame" x="179" y="12" width="242" height="20"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="Otm-OK-SMU"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="16"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="centerY" secondItem="lj4-G6-DiR" secondAttribute="centerY" id="3cF-vJ-68J"/>
+                                        <constraint firstAttribute="centerX" secondItem="lj4-G6-DiR" secondAttribute="centerX" id="7TX-Z2-4W7"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="wBP-qv-2z2" id="nvu-rO-JFf"/>
@@ -315,6 +337,8 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="600"/>
                     <connections>
                         <outlet property="switchAccountsBarButtonItem" destination="qBq-Fb-eMH" id="rnl-lY-HnZ"/>
                     </connections>

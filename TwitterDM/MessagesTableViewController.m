@@ -26,7 +26,7 @@ typedef enum ScrollDirection {
 } ScrollDirection;
 
 // Data from Twitter response for paging through followers
-@property (nonatomic, strong) NSMutableDictionary *data;
+@property (nonatomic, strong) NSDictionary *data;
 
 // Image cache for profile images, keyed by profile image url
 @property (nonatomic, strong) NSMutableDictionary *imageCache;
@@ -39,7 +39,7 @@ typedef enum ScrollDirection {
 @property (nonatomic, strong) NSMutableArray *users;
 
 // Infinitely loading (followers call)
-@property (nonatomic) BOOL infiniteLoading;
+//@property (nonatomic) BOOL infiniteLoading;
 
 // Infinitely loading (users call)
 @property (nonatomic) BOOL loadingUsers;
@@ -74,7 +74,6 @@ typedef enum ScrollDirection {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.data = [[NSMutableDictionary alloc] init];
     self.users = [[NSMutableArray alloc] init];
     self.ids = [[NSMutableArray alloc] init];
     self.imageCache = [[NSMutableDictionary alloc] init];
@@ -156,7 +155,7 @@ typedef enum ScrollDirection {
         
         self.loading = YES;
         
-        [self.data removeAllObjects];
+        self.data = nil;
         [self.users removeAllObjects];
         [self.ids removeAllObjects];
         
@@ -215,11 +214,17 @@ typedef enum ScrollDirection {
     // Check if we reached the rate limit
     if ([urlResponse statusCode] == 429) {
         NSLog(@"Rate limit reached");
+        self.loading = NO;
+        self.loadingUsers = NO;
+        [self.spinner stopAnimating];
         return;
     }
     // Check if there was an error
     if (error) {
         NSLog(@"Error: %@", error.localizedDescription);
+        self.loading = NO;
+        self.loadingUsers = NO;
+        [self.spinner stopAnimating];
         return;
     }
     // Check if there is some response data
@@ -246,11 +251,15 @@ typedef enum ScrollDirection {
     // Check if we reached the rate limit
     if ([urlResponse statusCode] == 429) {
         NSLog(@"Rate limit reached");
+        self.loading = NO;
+        [self.spinner stopAnimating];
         return;
     }
     // Check if there was an error
     if (error) {
         NSLog(@"Error: %@", error.localizedDescription);
+        self.loading = NO;
+        [self.spinner stopAnimating];
         return;
     }
     // Check if there is some response data
@@ -258,7 +267,7 @@ typedef enum ScrollDirection {
         NSError *error = nil;
         NSDictionary *TWData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&error];
         
-        [self.data addEntriesFromDictionary:TWData];
+        self.data = TWData;
         
         // for followers/list endpoint (not using, only fetches 20 at a time, rate limit reached)
         //            if([self.data objectForKey:@"users"] && [[self.data objectForKey:@"users"] isKindOfClass:[NSArray class]]) {
@@ -420,7 +429,7 @@ typedef enum ScrollDirection {
 #pragma mark - Infinite loading
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if(!self.endOfFeed && !self.infiniteLoading && self.tableView.contentSize.height > self.tableView.frame.size.height && scrollView.contentOffset.y > self.tableView.contentSize.height - (self.tableView.frame.size.height * 2)) {
+    if(!self.endOfFeed && !self.loading && self.tableView.contentSize.height > self.tableView.frame.size.height && scrollView.contentOffset.y > self.tableView.contentSize.height - (self.tableView.frame.size.height * 2)) {
         [self callInfiniteLoadRequest];
     }
     
@@ -436,7 +445,7 @@ typedef enum ScrollDirection {
 }
 
 - (void)callInfiniteLoadRequest {
-    self.infiniteLoading = YES;
+    self.loading = YES;
     
     // NSLog(@"loading next set of user ids:%lu ids:%lu", (unsigned long)self.users.count, (unsigned long)self.ids.count);
     
@@ -445,13 +454,12 @@ typedef enum ScrollDirection {
                                                                  URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/followers/ids.json?"]
                                                           parameters:@{
                                                                        @"screen_name" : self.twitterAccount.username,
-                                                                       @"cursor": self.data[@"next_cursor_str"]
+                                                                       @"cursor": ([self.data valueForKey:@"next_cursor_str"] ? self.data[@"next_cursor_str"] : @"-1")
                                                                        }
                                      ];
     [twitterInfoRequest setAccount:self.twitterAccount];
     [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
         [self handleFollowersResponse:responseData urlResponse:urlResponse error:error];
-        self.infiniteLoading = NO;
     }];
 }
 
