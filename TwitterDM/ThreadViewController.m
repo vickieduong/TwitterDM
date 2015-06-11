@@ -12,13 +12,27 @@
 
 @interface ThreadViewController ()
 
+// Text view for input
 @property (weak, nonatomic) IBOutlet UITextView *textView;
+
+// Tableview to display the messages
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
+
+// Bottom constraint of the view to the bottom of its container - adjusts for keyboard show/hide
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomConstraint;
+
+// Array of messages (model)
 @property (nonatomic, strong) NSMutableArray *messages;
+
+// Constraint for height of text box (autolayout)
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewHeightConstraint;
 
+// Keyboard height, once calculated
 @property (nonatomic) CGFloat keyboardHeight;
+
+// Sizing cells (mine & theirs) to use to calculate row heights
+@property (nonatomic, strong) MessageTableViewCell *sizingCellMine;
+@property (nonatomic, strong) MessageTableViewCell *sizingCellTheirs;
 
 @end
 
@@ -27,9 +41,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Add tap gesture recognizer to hide the keyboard when the table view (messages) is tapped
     UITapGestureRecognizer *tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)];
     [self.tableView addGestureRecognizer:tapper];
     
+    // Add bottom and top inset to the messages
     self.tableView.contentInset = UIEdgeInsetsMake(8, 0, 8, 0);
     
     self.messages = [[NSMutableArray alloc] init];
@@ -39,6 +55,7 @@
 {
     [super viewWillAppear:animated];
     
+    // Add self as an observer for keyboard notifications, to calculate the keyboard height
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardShown:)
                                                  name:UIKeyboardWillShowNotification
@@ -48,7 +65,17 @@
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
     
+    [self setUserTitle];
+}
+
+- (void)setUser:(NSDictionary *)user {
+    _user = user;
+    [self setUserTitle];
+}
+
+- (void)setUserTitle {
     if(self.user) {
+        // Set the title based on the user screen name
         self.navigationItem.title = [NSString stringWithFormat:@"@%@", self.user[@"screen_name"]];
         
         CGFloat navbarHeight = self.navigationController.navigationBar.frame.size.height;
@@ -77,19 +104,26 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    // Put focus in the text view input on appear
     [self.textView becomeFirstResponder];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
+    // Hide the keyboard
     [self.view endEditing:YES];
+    
+    // Remove self as an observer (of keyboard events, and all others)
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)endEditing {
     [self.view endEditing:YES];
 }
+
+#pragma mark - Keyboard height
 
 // Change the view based on keyboard showing or hiding
 
@@ -119,6 +153,8 @@
         [self scrollToBottom];
     }];
 }
+
+#pragma mark - Scroll to bottom (upon inserting a message)
 
 - (void)scrollToBottom {
     NSInteger index = self.messages.count - 1;
@@ -152,6 +188,7 @@
     return cell;
 }
 
+// Configure the UITableViewCell for the message (set the text in the label)
 - (void)configureBasicCell:(MessageTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     DirectMessage *msg = self.messages[indexPath.row];
     NSString *text = msg.text;
@@ -162,26 +199,23 @@
     return [self heightForBasicCellAtIndexPath:indexPath];
 }
 
+// Use dynamic heights for the message cells based on their content
 - (CGFloat)heightForBasicCellAtIndexPath:(NSIndexPath *)indexPath {
-    // Use dynamic heights for the message cells based on their content
     DirectMessage *msg = self.messages[indexPath.row];
     BOOL isMine = msg.isMine;
     
+    // Get an empty UITableViewCell for sizing (will configure it as we would for display, and get it's height to return)
     MessageTableViewCell *sizingCell;
     if(isMine) {
-        static MessageTableViewCell *sizingCellMine = nil;
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            sizingCellMine = [self.tableView dequeueReusableCellWithIdentifier:@"MessageTableViewCellMine"];
-        });
-        sizingCell = sizingCellMine;
+        if(!self.sizingCellMine) {
+            self.sizingCellMine = [self.tableView dequeueReusableCellWithIdentifier:@"MessageTableViewCellMine"];
+        }
+        sizingCell = self.sizingCellMine;
     } else {
-        static MessageTableViewCell *sizingCellTheirs = nil;
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            sizingCellTheirs = [self.tableView dequeueReusableCellWithIdentifier:@"MessageTableViewCellTheirs"];
-        });
-        sizingCell = sizingCellTheirs;
+        if(!self.sizingCellTheirs) {
+            self.sizingCellTheirs = [self.tableView dequeueReusableCellWithIdentifier:@"MessageTableViewCellTheirs"];
+        }
+        sizingCell = self.sizingCellTheirs;
     }
     
     [self configureBasicCell:sizingCell atIndexPath:indexPath];
@@ -194,31 +228,34 @@
 
 // User pressed send
 - (IBAction)sendTouch:(id)sender {
+    // disable the send button
     [sender setEnabled:NO];
+
     NSString *text = self.textView.text;
-    NSString *trimmed = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
-    if(![trimmed isEqualToString:@""]) {
+    // Add the users message (mine)
+    DirectMessage *msg = [[DirectMessage alloc] init];
+    msg.text = text;
+    msg.isMine = YES;
+    msg.date = [NSDate date];
+    
+    [self addMessage:msg];
+    
+    // Insert a reply 1.0 seconds after the user sends this message (theirs)
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         DirectMessage *msg = [[DirectMessage alloc] init];
-        msg.text = trimmed;
-        msg.isMine = YES;
+        msg.text = [text stringByAppendingString:[NSString stringWithFormat:@" %@", text]];
+        msg.isMine = NO;
         msg.date = [NSDate date];
         
         [self addMessage:msg];
-        
-        // Insert a reply 1.0 seconds after the user sends this message
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            DirectMessage *msg = [[DirectMessage alloc] init];
-            msg.text = [trimmed stringByAppendingString:[NSString stringWithFormat:@" %@", trimmed]];
-            msg.isMine = NO;
-            msg.date = [NSDate date];
-            
-            [self addMessage:msg];
-        });
-        
-        self.textView.text = @"";
-        self.textViewHeightConstraint.constant = 30;
-    }
+    });
+    
+    // Reset the UITextView text and height
+    self.textView.text = @"";
+    self.textViewHeightConstraint.constant = 30;
+
+    // enable the send button
     [sender setEnabled:YES];
 }
 
@@ -231,12 +268,14 @@
     NSCharacterSet *cset = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
     NSRange range = [text rangeOfCharacterFromSet:cset];
     if (range.location == NSNotFound) {
-        // no newline
+        // no newline, this is only one line of text, set min height to 30
         self.textViewHeightConstraint.constant = 30;
     } else {
         // contains newline
         // NSString class method: boundingRectWithSize:options:attributes:context is
         // available only on ios7.0 sdk.
+        
+        // Get the height of the text
         CGRect rect = [text boundingRectWithSize:CGSizeMake(self.textView.frame.size.width, CGFLOAT_MAX)
                                          options:NSStringDrawingUsesLineFragmentOrigin
                                       attributes:attributes
@@ -244,6 +283,7 @@
         
         CGFloat height = rect.size.height;
         
+        // Get the height of one extra line
         CGRect oneLineRect = [@"" boundingRectWithSize:CGSizeMake(self.textView.frame.size.width, CGFLOAT_MAX)
                                                options:NSStringDrawingUsesLineFragmentOrigin
                                             attributes:attributes
@@ -252,6 +292,7 @@
         height += (self.textView.contentInset.top + self.textView.contentInset.bottom + oneLineRect.size.height);
         
         if([text length] > 0) {
+            // If the last character is a new line \n, then add one more line height
             unichar last = [text characterAtIndex:[text length] - 1];
             if ([[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:last]) {
                 // ends with newline
@@ -273,6 +314,7 @@
         
         [self.messages addObject:msg];
         
+        // Reload the table view (or insert the row) to refresh the UI
         if(prevCount <= 0) {
             [self.tableView reloadData];
         } else {
@@ -282,6 +324,7 @@
             [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationBottom];
         }
         
+        // Keep the message thread scrolled to the newly inserted row upon insertion
         dispatch_async(dispatch_get_main_queue(), ^{
             [self scrollToBottom];
         });

@@ -2,6 +2,8 @@
 //  AccountsTableViewController.m
 //  TwitterDM
 //
+//  View Controller to view and switch the multiple Twitter accounts logged in on iOS
+//
 //  Created by Vickie Duong on 6/9/15.
 //  Copyright (c) 2015 HeartThis. All rights reserved.
 //
@@ -35,7 +37,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TwitterHandleTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TwitterHandleTableViewCell" forIndexPath:indexPath];
-    
+
+    // Show the account's handle
     ACAccount *user = [self.accounts objectAtIndex:indexPath.row];
     cell.handleLabel.text = user.username;
     
@@ -45,10 +48,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     ACAccount *account = [self.accounts objectAtIndex:indexPath.row];
     
-    if(self.delegate) {
+    // When selected an account (row in UITableView), set the account on the delegate
+    if(self.delegate && [self.delegate respondsToSelector:@selector(setTwitterAccount:)]) {
         [self.delegate setTwitterAccount:account];
     }
     
+    // Close this view
     [self backTouch];
 }
 
