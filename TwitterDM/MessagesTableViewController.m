@@ -162,7 +162,7 @@ typedef enum ScrollDirection {
     if(!self.loadingUsers) {
         self.loadingUsers = YES;
         
-        NSLog(@"loading next user batch users:%lu ids:%lu", (unsigned long)self.users.count, (unsigned long)self.ids.count);
+        // NSLog(@"loading next user batch users:%lu ids:%lu", (unsigned long)self.users.count, (unsigned long)self.ids.count);
         
         NSArray *idSet;
         @synchronized(self.ids) {
@@ -404,7 +404,7 @@ typedef enum ScrollDirection {
 - (void)callInfiniteLoadRequest {
     self.infiniteLoading = YES;
     
-    NSLog(@"loading next set of user ids:%lu ids:%lu", (unsigned long)self.users.count, (unsigned long)self.ids.count);
+    // NSLog(@"loading next set of user ids:%lu ids:%lu", (unsigned long)self.users.count, (unsigned long)self.ids.count);
     
     SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
                                                        requestMethod:SLRequestMethodGET
