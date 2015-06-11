@@ -91,6 +91,8 @@
     [self.view endEditing:YES];
 }
 
+// Change the view based on keyboard showing or hiding
+
 - (void)keyboardHidden:(NSNotification *)notification {
     double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
@@ -151,7 +153,6 @@
 }
 
 - (void)configureBasicCell:(MessageTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    
     DirectMessage *msg = self.messages[indexPath.row];
     NSString *text = msg.text;
     [cell setText:text isMine:msg.isMine];
@@ -162,6 +163,7 @@
 }
 
 - (CGFloat)heightForBasicCellAtIndexPath:(NSIndexPath *)indexPath {
+    // Use dynamic heights for the message cells based on their content
     DirectMessage *msg = self.messages[indexPath.row];
     BOOL isMine = msg.isMine;
     
@@ -190,6 +192,7 @@
     return 44.0f;
 }
 
+// User pressed send
 - (IBAction)sendTouch:(id)sender {
     [sender setEnabled:NO];
     NSString *text = self.textView.text;
@@ -203,6 +206,7 @@
         
         [self addMessage:msg];
         
+        // Insert a reply 1.0 seconds after the user sends this message
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             DirectMessage *msg = [[DirectMessage alloc] init];
             msg.text = [trimmed stringByAppendingString:[NSString stringWithFormat:@" %@", trimmed]];
@@ -218,6 +222,7 @@
     [sender setEnabled:YES];
 }
 
+// Increase height of text view (up to a certain max) as the user types in the UITextView
 - (void)textViewDidChange:(UITextView *)textView {
     NSDictionary *attributes = @{NSFontAttributeName: self.textView.font};
     
@@ -261,6 +266,7 @@
     }
 }
 
+// Add a message to the tableview
 - (void)addMessage:(DirectMessage *)msg {
     @synchronized (self.messages) {
         NSInteger prevCount = self.messages.count;

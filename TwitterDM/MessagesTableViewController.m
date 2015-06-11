@@ -25,19 +25,45 @@ typedef enum ScrollDirection {
     ScrollDirectionCrazy,
 } ScrollDirection;
 
+// Data from Twitter response for paging through followers
 @property (nonatomic, strong) NSMutableDictionary *data;
+
+// Image cache for profile images, keyed by profile image url
 @property (nonatomic, strong) NSMutableDictionary *imageCache;
+
+// We fetch 5000 follower ids at a time
 @property (nonatomic, strong) NSMutableArray *ids;
+
+// We can only look up 100 users at a time, so we keep ids and users separate.
+// Tableview uses users, since we want the data loaded from the user objects
 @property (nonatomic, strong) NSMutableArray *users;
+
+// Infinitely loading (followers call)
 @property (nonatomic) BOOL infiniteLoading;
+
+// Infinitely loading (users call)
 @property (nonatomic) BOOL loadingUsers;
+
+// End of followers list
 @property (nonatomic) BOOL endOfFeed;
+
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *switchAccountsBarButtonItem;
+
+// Multiple twitter accounts
 @property (nonatomic, strong) NSArray *accounts;
+
+// Last used twitter name (so we don't recall the endpoint if they don't change the user)
+// Also so we know if a Twitter account was deleted, we need to refresh table view with
+// new valid Twitter account (if any)
 @property (nonatomic, strong) NSString *lastUsername;
 
+// Loading Twitter account information
 @property (nonatomic) BOOL loading;
+
+// Spinner
 @property (nonatomic, strong) UIActivityIndicatorView *spinner;
+
+// To determine scroll direction (for infinite loading)
 @property (nonatomic) CGFloat lastContentOffset;
 @property (nonatomic) ScrollDirection scrollDirection;
 
@@ -119,6 +145,7 @@ typedef enum ScrollDirection {
     }
 }
 
+// When the Twitter account is updated, set the last username to this Twitter account username
 - (void)setTwitterAccount:(ACAccount *)twitterAccount {
     dispatch_async(dispatch_get_main_queue(), ^{
         _twitterAccount = twitterAccount;
@@ -148,7 +175,7 @@ typedef enum ScrollDirection {
                                              ];
             [twitterInfoRequest setAccount:self.twitterAccount];
             [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-                [self handleTwitterResponse:responseData urlResponse:urlResponse error:error];
+                [self handleFollowersResponse:responseData urlResponse:urlResponse error:error];
             }];
         } else {
             self.loading = NO;
@@ -215,7 +242,7 @@ typedef enum ScrollDirection {
     }
 }
 
-- (void)handleTwitterResponse:(NSData*)responseData urlResponse:(NSHTTPURLResponse *)urlResponse error:(NSError *)error {
+- (void)handleFollowersResponse:(NSData*)responseData urlResponse:(NSHTTPURLResponse *)urlResponse error:(NSError *)error {
     // Check if we reached the rate limit
     if ([urlResponse statusCode] == 429) {
         NSLog(@"Rate limit reached");
@@ -262,7 +289,7 @@ typedef enum ScrollDirection {
     if(self.loading) {
         return 0;
     }
-    return MAX(1, self.users.count);
+    return MAX(1, self.users.count); // minimum of 1 row, for the empty table view cell
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -271,6 +298,7 @@ typedef enum ScrollDirection {
     }
 }
 
+// Make the separators extend the full width of the screen
 // for ios 7 vs ios 8
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -289,6 +317,7 @@ typedef enum ScrollDirection {
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(self.accounts.count <= 0) {
+        // No accounts - show empty instructions that take up the entire table view height
         CGFloat statusBarHeight = ([UIApplication sharedApplication].statusBarFrame.size.height);
         CGFloat navigationBarHeight = (self.navigationController.navigationBar.bounds.size.height);
         CGFloat topBarHeight = statusBarHeight + navigationBarHeight;
@@ -296,6 +325,7 @@ typedef enum ScrollDirection {
         CGFloat height = self.tableView.frame.size.height - topBarHeight;
         return height;
     } else {
+        // Height for TwitterHandleTableViewCell
         return 75.0;
     }
 }
@@ -372,18 +402,22 @@ typedef enum ScrollDirection {
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if([sender isKindOfClass:[TwitterHandleTableViewCell class]]) {
+        // If we are transitioning to a ThreadViewController, set the user on that thread
         TwitterHandleTableViewCell *cell = (TwitterHandleTableViewCell *)sender;
         NSDictionary *user = cell.user;
         
         ThreadViewController *vc = (ThreadViewController *)[segue destinationViewController];
         vc.user = user;
     } else if([sender isKindOfClass:[UIBarButtonItem class]]) {
+        // If we are transitioning to the select account table view controller, set the accounts
         UINavigationController *navController = [segue destinationViewController];
         AccountsTableViewController *vc = (AccountsTableViewController *) [[navController viewControllers] objectAtIndex:0];
         vc.delegate = self;
         vc.accounts = self.accounts;
     }
 }
+
+#pragma mark - Infinite loading
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if(!self.endOfFeed && !self.infiniteLoading && self.tableView.contentSize.height > self.tableView.frame.size.height && scrollView.contentOffset.y > self.tableView.contentSize.height - (self.tableView.frame.size.height * 2)) {
@@ -416,7 +450,7 @@ typedef enum ScrollDirection {
                                      ];
     [twitterInfoRequest setAccount:self.twitterAccount];
     [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-        [self handleTwitterResponse:responseData urlResponse:urlResponse error:error];
+        [self handleFollowersResponse:responseData urlResponse:urlResponse error:error];
         self.infiniteLoading = NO;
     }];
 }
