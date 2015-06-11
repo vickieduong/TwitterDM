@@ -137,7 +137,6 @@ typedef enum ScrollDirection {
 }
 
 - (void)didReceiveMemoryWarning {
-    NSLog(@"memory warning");
     [super didReceiveMemoryWarning];
     @synchronized(self.imageCache) {
         [self.imageCache removeAllObjects];
@@ -429,10 +428,6 @@ typedef enum ScrollDirection {
 #pragma mark - Infinite loading
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if(!self.endOfFeed && !self.loading && self.tableView.contentSize.height > self.tableView.frame.size.height && scrollView.contentOffset.y > self.tableView.contentSize.height - (self.tableView.frame.size.height * 2)) {
-        [self callInfiniteLoadRequest];
-    }
-    
     ScrollDirection scrollDirection;
     if (self.lastContentOffset > scrollView.contentOffset.y)
         scrollDirection = ScrollDirectionUp;
@@ -442,6 +437,10 @@ typedef enum ScrollDirection {
     self.lastContentOffset = scrollView.contentOffset.y;
     
     self.scrollDirection = scrollDirection;
+    
+    if(scrollDirection == ScrollDirectionDown && !self.endOfFeed && !self.loading && self.tableView.contentSize.height > self.tableView.frame.size.height && scrollView.contentOffset.y > self.tableView.contentSize.height - (self.tableView.frame.size.height * 2)) {
+        [self callInfiniteLoadRequest];
+    }
 }
 
 - (void)callInfiniteLoadRequest {
