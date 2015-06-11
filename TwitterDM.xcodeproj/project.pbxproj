@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		910EC62F1B29002400C1D122 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 910EC62D1B29002400C1D122 /* Fabric.framework */; };
-		910EC6301B29002400C1D122 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 910EC62E1B29002400C1D122 /* Crashlytics.framework */; };
 		918341A31B26435000A53B8A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 918341A21B26435000A53B8A /* main.m */; };
 		918341A61B26435000A53B8A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 918341A51B26435000A53B8A /* AppDelegate.m */; };
 		918341AC1B26435000A53B8A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 918341AA1B26435000A53B8A /* Main.storyboard */; };
@@ -44,8 +42,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		910EC62D1B29002400C1D122 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
-		910EC62E1B29002400C1D122 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		9183419D1B26435000A53B8A /* TwitterDM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterDM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		918341A11B26435000A53B8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		918341A21B26435000A53B8A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -89,8 +85,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				910EC6301B29002400C1D122 /* Crashlytics.framework in Frameworks */,
-				910EC62F1B29002400C1D122 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,8 +101,6 @@
 		918341941B26435000A53B8A = {
 			isa = PBXGroup;
 			children = (
-				910EC62D1B29002400C1D122 /* Fabric.framework */,
-				910EC62E1B29002400C1D122 /* Crashlytics.framework */,
 				9183419F1B26435000A53B8A /* TwitterDM */,
 				918341B91B26435000A53B8A /* TwitterDMTests */,
 				9183419E1B26435000A53B8A /* Products */,
@@ -222,7 +214,6 @@
 				918341991B26435000A53B8A /* Sources */,
 				9183419A1B26435000A53B8A /* Frameworks */,
 				9183419B1B26435000A53B8A /* Resources */,
-				910EC62C1B28FFF200C1D122 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -315,22 +306,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		910EC62C1B28FFF200C1D122 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "./Fabric.framework/run 54ad26c2489a0af540e9fb84846a3e923c463672 e0e60da78820e00286564a77fc6552172352c2f4a8a749526d62d6965f1ab9e3";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		918341991B26435000A53B8A /* Sources */ = {
