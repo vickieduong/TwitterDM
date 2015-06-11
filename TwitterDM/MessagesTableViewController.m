@@ -87,11 +87,13 @@ typedef enum ScrollDirection {
         [self.tableView setLayoutMargins:UIEdgeInsetsZero];
     }
     
+    // Register for notifications when application enters foreground (for when the user changes their Twitter accounts in the settings app, we want to refresh when they come back to this app)
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(twitterAccountsUpdated) name:@"ApplicationEnteredForeground" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(twitterAccountsUpdated) name:@"ACAccountStoreDidChangeNotification" object:nil];
     
     self.tableView.alwaysBounceVertical = NO;
     
+    // Loading spinner
     self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.spinner.center = self.view.center;
     [self.view addSubview:self.spinner];
@@ -111,6 +113,7 @@ typedef enum ScrollDirection {
                 // Check if the users has setup at least one Twitter account
                 if (self.accounts.count > 0)
                 {
+                    // Show/hide the settings button to enable switching accounts based on the number of Twitter accounts connected
                     dispatch_sync(dispatch_get_main_queue(), ^{
                         if(self.accounts.count > 1) {
                             self.switchAccountsBarButtonItem.enabled = YES;
@@ -119,6 +122,7 @@ typedef enum ScrollDirection {
                         }
                     });
                     
+                    // Reload the Twitter followers by calling setTwitterAcount, only if this user is different from the previous one (or the previous one didn't exist)
                     if(!self.lastUsername || ![self.twitterAccount.username isEqualToString:self.lastUsername] || ![self.accounts containsObject:self.twitterAccount]) {
                         self.twitterAccount = [self.accounts firstObject];
                     }
@@ -183,47 +187,53 @@ typedef enum ScrollDirection {
     });
 }
 
+// Load in one batch of users from the follower ids that were already loaded
 - (void)loadUsersBatch {
     if(!self.loadingUsers) {
-        self.loadingUsers = YES;
-        
-        // NSLog(@"loading next user batch users:%lu ids:%lu", (unsigned long)self.users.count, (unsigned long)self.ids.count);
-        
         NSArray *idSet;
         @synchronized(self.ids) {
-            NSRange range = NSMakeRange(0, MIN(self.ids.count, 100));
-            idSet = [self.ids subarrayWithRange:range];
-            [self.ids removeObjectsInRange:range];
+            if(self.ids.count > 0) {
+                NSRange range = NSMakeRange(0, MIN(self.ids.count, 100));
+                idSet = [self.ids subarrayWithRange:range];
+                [self.ids removeObjectsInRange:range];
+            }
         }
-        SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
-                                                           requestMethod:SLRequestMethodGET
-                                                                     URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/users/lookup.json?"]
-                                                              parameters:@{
-                                                                           @"user_id": [idSet componentsJoinedByString:@","]
-                                                                           }
-                                         ];
-        [twitterInfoRequest setAccount:self.twitterAccount];
-        [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-            [self handleTwitterUserResponse:responseData urlResponse:urlResponse error:error];
-        }];
+        if(idSet && [idSet count] > 0) {
+            self.loadingUsers = YES;
+            
+            // NSLog(@"loading next user batch users:%lu ids:%lu", (unsigned long)self.users.count, (unsigned long)self.ids.count);
+            
+            SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
+                                                               requestMethod:SLRequestMethodGET
+                                                                         URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/users/lookup.json?"]
+                                                                  parameters:@{
+                                                                               @"user_id": [idSet componentsJoinedByString:@","]
+                                                                               }
+                                             ];
+            [twitterInfoRequest setAccount:self.twitterAccount];
+            [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+                [self handleTwitterUserResponse:responseData urlResponse:urlResponse error:error];
+            }];
+        } else {
+            self.loading = NO;
+            self.loadingUsers = NO;
+            [self.spinner stopAnimating];
+        }
     }
 }
 
+// Convert response from users/lookup into dictionary objects in self.users (which is datasource for UITableView)
 - (void)handleTwitterUserResponse:(NSData*)responseData urlResponse:(NSHTTPURLResponse *)urlResponse error:(NSError *)error {
     // Check if we reached the rate limit
     if ([urlResponse statusCode] == 429) {
         NSLog(@"Rate limit reached");
-        self.loading = NO;
-        self.loadingUsers = NO;
-        [self.spinner stopAnimating];
+        [self handleError:YES];
         return;
     }
     // Check if there was an error
     if (error) {
         NSLog(@"Error: %@", error.localizedDescription);
-        self.loading = NO;
-        self.loadingUsers = NO;
-        [self.spinner stopAnimating];
+        [self handleError:YES];
         return;
     }
     // Check if there is some response data
@@ -231,11 +241,14 @@ typedef enum ScrollDirection {
         NSError *error = nil;
         NSArray *TWData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&error];
         
+        // Add the user objects to self.users
         if([TWData isKindOfClass:[NSArray class]]) {
             @synchronized(self.users) {
                 [self.users addObjectsFromArray:TWData];
             }
         }
+        
+        // Refresh the table view
         dispatch_async(dispatch_get_main_queue(), ^{
             self.loading = NO;
             self.loadingUsers = NO;
@@ -243,22 +256,33 @@ typedef enum ScrollDirection {
             
             [self.tableView reloadData];
         });
+    } else {
+        [self handleError:YES];
     }
 }
 
+- (void)handleError:(BOOL)users {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.loading = NO;
+        if(users) {
+            self.loadingUsers = NO;
+        }
+        [self.spinner stopAnimating];
+    });
+}
+
+// Convert response from followers/ids into array of ids in self.ids (which will be converted to users in users/lookup)
 - (void)handleFollowersResponse:(NSData*)responseData urlResponse:(NSHTTPURLResponse *)urlResponse error:(NSError *)error {
     // Check if we reached the rate limit
     if ([urlResponse statusCode] == 429) {
         NSLog(@"Rate limit reached");
-        self.loading = NO;
-        [self.spinner stopAnimating];
+        [self handleError:NO];
         return;
     }
     // Check if there was an error
     if (error) {
         NSLog(@"Error: %@", error.localizedDescription);
-        self.loading = NO;
-        [self.spinner stopAnimating];
+        [self handleError:NO];
         return;
     }
     // Check if there is some response data
@@ -281,9 +305,12 @@ typedef enum ScrollDirection {
             [self loadUsersBatch];
         }
         
+        // if no next_cursor_str, we've reached the end of the followers list, set endOfFeed to YES so we don't keep calling Twitter server calls
         if([self.data[@"next_cursor_str"] isEqualToString:@"0"]) {
             self.endOfFeed = YES;
         }
+    } else {
+        [self handleError:NO];
     }
 }
 
@@ -324,8 +351,8 @@ typedef enum ScrollDirection {
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(self.accounts.count <= 0) {
-        // No accounts - show empty instructions that take up the entire table view height
+    if(!self.data || self.accounts.count <= 0) {
+        // No accounts - show empty instructions that take up the entire table view height or error text
         CGFloat statusBarHeight = ([UIApplication sharedApplication].statusBarFrame.size.height);
         CGFloat navigationBarHeight = (self.navigationController.navigationBar.bounds.size.height);
         CGFloat topBarHeight = statusBarHeight + navigationBarHeight;
@@ -339,7 +366,12 @@ typedef enum ScrollDirection {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(self.accounts.count <= 0) {
+    if(!self.data) {
+        // there was an error loading the data
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ErrorTableViewCell" forIndexPath:indexPath];
+        return cell;
+    } else if(self.accounts.count <= 0) {
+        // no accounts loaded, show instructions on adding a Twitter account
         EmptyTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EmptyTableViewCell" forIndexPath:indexPath];
         return cell;
     } else {
@@ -359,12 +391,15 @@ typedef enum ScrollDirection {
         NSString *urlString = user[@"profile_image_url_https"];
         NSObject *existingImage;
         @synchronized(self.imageCache) {
+            // Check the image cache for the user's profile image
             existingImage = [self.imageCache objectForKey:urlString];
         }
         
         if(existingImage) {
+            // image exists in the cache, use that
             [self fadeInImage:(UIImage *)existingImage inImageView:cell.thumbnail];
         } else {
+            // image doesn't exist in the cache, load it asynchronously to not block UI
             NSURL *url = [NSURL URLWithString:urlString];
             NSURLRequest *request = [NSURLRequest requestWithURL:url];
             NSOperationQueue *queue = [[NSOperationQueue alloc] init];
@@ -381,14 +416,20 @@ typedef enum ScrollDirection {
                                 [self fadeInImage:image inImageView:cell.thumbnail];
                             }
                         });
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            cell.thumbnail.backgroundColor = [UIColor lightGrayColor];
+                        });
                     }
                 } else {
-                    cell.thumbnail.backgroundColor = [UIColor lightGrayColor];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        cell.thumbnail.backgroundColor = [UIColor lightGrayColor];
+                    });
                 }
             }];
         }
         
-        // Check if we are 50(ish) rows from the bottom, if yes, fetch the next batch of 100 users from the user ids
+        // Check if we are 100(ish) rows from the bottom, if yes, fetch the next batch of 100 users from the user ids
         if(self.scrollDirection == ScrollDirectionDown && indexPath.row >= self.users.count - 100) {
             [self loadUsersBatch];
         }
@@ -397,6 +438,7 @@ typedef enum ScrollDirection {
     }
 }
 
+// perform the fade in animation for images
 - (void)fadeInImage:(UIImage *)image inImageView:(UIImageView *)imageView {
     [UIView transitionWithView:imageView
                       duration:0.2
@@ -428,6 +470,7 @@ typedef enum ScrollDirection {
 #pragma mark - Infinite loading
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    // keep track of the scroll direction (for loading users and ids)
     ScrollDirection scrollDirection;
     if (self.lastContentOffset > scrollView.contentOffset.y)
         scrollDirection = ScrollDirectionUp;
@@ -438,7 +481,12 @@ typedef enum ScrollDirection {
     
     self.scrollDirection = scrollDirection;
     
-    if(scrollDirection == ScrollDirectionDown && !self.endOfFeed && !self.loading && self.tableView.contentSize.height > self.tableView.frame.size.height && scrollView.contentOffset.y > self.tableView.contentSize.height - (self.tableView.frame.size.height * 2)) {
+    // if scrolling down and didn't reach end of followers id list (next_cursor_str was empty) and not currently loading
+    // and past a certain scroll point for infinite load, call infinite load request
+    if(scrollDirection == ScrollDirectionDown &&
+       !self.endOfFeed &&
+       !self.loading &&
+       self.tableView.contentSize.height > self.tableView.frame.size.height && scrollView.contentOffset.y > self.tableView.contentSize.height - (self.tableView.frame.size.height * 2)) {
         [self callInfiniteLoadRequest];
     }
 }
@@ -448,6 +496,7 @@ typedef enum ScrollDirection {
     
     // NSLog(@"loading next set of user ids:%lu ids:%lu", (unsigned long)self.users.count, (unsigned long)self.ids.count);
     
+    // get the next batch of follower ids based on the next_cursor_str in self.data
     SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
                                                        requestMethod:SLRequestMethodGET
                                                                  URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/followers/ids.json?"]
