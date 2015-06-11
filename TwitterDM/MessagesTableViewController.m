@@ -112,8 +112,11 @@ typedef enum ScrollDirection {
 }
 
 - (void)didReceiveMemoryWarning {
+    NSLog(@"memory warning");
     [super didReceiveMemoryWarning];
-    [self.imageCache removeAllObjects];
+    @synchronized(self.imageCache) {
+        [self.imageCache removeAllObjects];
+    }
 }
 
 - (void)setTwitterAccount:(ACAccount *)twitterAccount {
@@ -159,11 +162,11 @@ typedef enum ScrollDirection {
     if(!self.loadingUsers) {
         self.loadingUsers = YES;
         
-        NSLog(@"loading next user batch users:%d ids:%d", self.users.count, self.ids.count);
+        NSLog(@"loading next user batch users:%lu ids:%lu", (unsigned long)self.users.count, (unsigned long)self.ids.count);
         
         NSArray *idSet;
         @synchronized(self.ids) {
-            NSRange range = NSMakeRange(0, 100);
+            NSRange range = NSMakeRange(0, MIN(self.ids.count, 100));
             idSet = [self.ids subarrayWithRange:range];
             [self.ids removeObjectsInRange:range];
         }
@@ -316,9 +319,13 @@ typedef enum ScrollDirection {
         NSString *usernameCopy = [username copy];
         
         NSString *urlString = user[@"profile_image_url_https"];
-        if([self.imageCache objectForKey:urlString]) {
-            UIImage *image = [self.imageCache objectForKey:urlString];
-            [self fadeInImage:image inImageView:cell.thumbnail];
+        NSObject *existingImage;
+        @synchronized(self.imageCache) {
+            existingImage = [self.imageCache objectForKey:urlString];
+        }
+        
+        if(existingImage) {
+            [self fadeInImage:(UIImage *)existingImage inImageView:cell.thumbnail];
         } else {
             NSURL *url = [NSURL URLWithString:urlString];
             NSURLRequest *request = [NSURLRequest requestWithURL:url];
@@ -326,13 +333,17 @@ typedef enum ScrollDirection {
             [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
                 if(!connectionError && data) {
                     UIImage *image = [UIImage imageWithData:data];
-                    [self.imageCache setObject:image forKey:urlString];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        // Check if cell's user is the same (since we're reusing table cells)
-                        if([cell.user[@"screen_name"] isEqualToString:usernameCopy]) {
-                            [self fadeInImage:image inImageView:cell.thumbnail];
+                    if(image) {
+                        @synchronized(self.imageCache) {
+                            [self.imageCache setObject:image forKey:urlString];
                         }
-                    });
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            // Check if cell's user is the same (since we're reusing table cells)
+                            if([cell.user[@"screen_name"] isEqualToString:usernameCopy]) {
+                                [self fadeInImage:image inImageView:cell.thumbnail];
+                            }
+                        });
+                    }
                 } else {
                     cell.thumbnail.backgroundColor = [UIColor lightGrayColor];
                 }
@@ -340,7 +351,7 @@ typedef enum ScrollDirection {
         }
         
         // Check if we are 50(ish) rows from the bottom, if yes, fetch the next batch of 100 users from the user ids
-        if(self.scrollDirection == ScrollDirectionDown && indexPath.row >= self.users.count - 50) {
+        if(self.scrollDirection == ScrollDirectionDown && indexPath.row >= self.users.count - 100) {
             [self loadUsersBatch];
         }
         
@@ -392,6 +403,8 @@ typedef enum ScrollDirection {
 
 - (void)callInfiniteLoadRequest {
     self.infiniteLoading = YES;
+    
+    NSLog(@"loading next set of user ids:%lu ids:%lu", (unsigned long)self.users.count, (unsigned long)self.ids.count);
     
     SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
                                                        requestMethod:SLRequestMethodGET

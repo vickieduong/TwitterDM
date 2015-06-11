@@ -12,6 +12,5 @@
 
 - (void)setText:(NSString *)text isMine:(BOOL)isMine;
 - (CGFloat)getEstimatedHeight;
-- (void) redrawBubble:(BOOL)doLabel;
 
 @end

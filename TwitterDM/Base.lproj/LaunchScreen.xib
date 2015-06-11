@@ -11,30 +11,28 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="j5h-hr-mV3">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="© Vickie Duong | HeartThis" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EdJ-fu-8lW">
+                    <rect key="frame" x="26" y="304" width="191" height="21"/>
+                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HVc-IM-Lau">
-                    <rect key="frame" x="26" y="162" width="269" height="156"/>
+                    <rect key="frame" x="26" y="148" width="269" height="156"/>
                     <fontDescription key="fontDescription" type="system" weight="thin" pointSize="130"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.49469196132517451" green="0.74925513907863706" blue="0.98369580507278442" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstItem="j5h-hr-mV3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="MvL-Fi-pbP"/>
-                <constraint firstAttribute="trailing" secondItem="j5h-hr-mV3" secondAttribute="trailing" id="Pg3-aQ-Ls4"/>
-                <constraint firstItem="j5h-hr-mV3" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Qd9-pg-BsN"/>
-                <constraint firstAttribute="centerY" secondItem="HVc-IM-Lau" secondAttribute="centerY" constant="0.5" id="Xuc-XM-aoc"/>
+                <constraint firstItem="EdJ-fu-8lW" firstAttribute="top" secondItem="HVc-IM-Lau" secondAttribute="bottom" id="Byi-BB-sFH"/>
+                <constraint firstAttribute="centerY" secondItem="HVc-IM-Lau" secondAttribute="centerY" constant="14" id="Xuc-XM-aoc"/>
+                <constraint firstItem="EdJ-fu-8lW" firstAttribute="leading" secondItem="HVc-IM-Lau" secondAttribute="leading" id="YrJ-OE-69j"/>
                 <constraint firstAttribute="centerX" secondItem="HVc-IM-Lau" secondAttribute="centerX" id="fki-GJ-9zt"/>
-                <constraint firstAttribute="bottom" secondItem="j5h-hr-mV3" secondAttribute="bottom" id="rXt-IS-n0k"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="548" y="455"/>
         </view>
     </objects>
-    <resources>
-        <image name="bg.png" width="320" height="469"/>
-    </resources>
 </document>

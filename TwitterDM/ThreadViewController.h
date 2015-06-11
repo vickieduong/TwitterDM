@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ThreadViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface ThreadViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
 
 @property (nonatomic, weak) NSDictionary *user;
 

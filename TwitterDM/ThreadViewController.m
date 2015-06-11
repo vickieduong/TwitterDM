@@ -16,6 +16,9 @@
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomConstraint;
 @property (nonatomic, strong) NSMutableArray *messages;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewHeightConstraint;
+
+@property (nonatomic) CGFloat keyboardHeight;
 
 @end
 
@@ -72,6 +75,11 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.textView becomeFirstResponder];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -93,6 +101,7 @@
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     keyboardRect = [self.view convertRect:keyboardRect fromView:nil];
     CGFloat keyboardHeight = keyboardRect.size.height;
+    self.keyboardHeight = keyboardHeight;
     
     double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     
@@ -204,8 +213,52 @@
         });
         
         self.textView.text = @"";
+        self.textViewHeightConstraint.constant = 30;
     }
     [sender setEnabled:YES];
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+    NSDictionary *attributes = @{NSFontAttributeName: self.textView.font};
+    
+    NSString *text = self.textView.text;
+    
+    NSCharacterSet *cset = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
+    NSRange range = [text rangeOfCharacterFromSet:cset];
+    if (range.location == NSNotFound) {
+        // no newline
+        self.textViewHeightConstraint.constant = 30;
+    } else {
+        // contains newline
+        // NSString class method: boundingRectWithSize:options:attributes:context is
+        // available only on ios7.0 sdk.
+        CGRect rect = [text boundingRectWithSize:CGSizeMake(self.textView.frame.size.width, CGFLOAT_MAX)
+                                         options:NSStringDrawingUsesLineFragmentOrigin
+                                      attributes:attributes
+                                         context:nil];
+        
+        CGFloat height = rect.size.height;
+        
+        CGRect oneLineRect = [@"" boundingRectWithSize:CGSizeMake(self.textView.frame.size.width, CGFLOAT_MAX)
+                                               options:NSStringDrawingUsesLineFragmentOrigin
+                                            attributes:attributes
+                                               context:nil];
+        
+        height += (self.textView.contentInset.top + self.textView.contentInset.bottom + oneLineRect.size.height);
+        
+        if([text length] > 0) {
+            unichar last = [text characterAtIndex:[text length] - 1];
+            if ([[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:last]) {
+                // ends with newline
+                height += oneLineRect.size.height;
+            }
+        }
+        
+        CGFloat textViewMaxHeight = self.view.frame.size.height - self.keyboardHeight - 200.0f;
+        
+        CGFloat newHeight = MIN(height, textViewMaxHeight);
+        self.textViewHeightConstraint.constant = newHeight;
+    }
 }
 
 - (void)addMessage:(DirectMessage *)msg {
@@ -213,7 +266,7 @@
         NSInteger prevCount = self.messages.count;
         
         [self.messages addObject:msg];
-
+        
         if(prevCount <= 0) {
             [self.tableView reloadData];
         } else {

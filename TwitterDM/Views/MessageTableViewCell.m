@@ -22,17 +22,17 @@
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    [self redrawBubble:NO];
+    [self redrawBubble];
 }
 
 - (void)setText:(NSString *)text isMine:(BOOL)isMine {
     self.isMine = isMine;
     self.label.text = text;
     [self.label sizeToFit];
-    [self redrawBubble:YES];
+    [self redrawBubble];
 }
 
-- (void) redrawBubble:(BOOL)doLabel {
+- (void)redrawBubble {
     if (!self.bubbleImage) {
         self.bubbleImage = [[UIImageView alloc] init];
         [self addSubview:self.bubbleImage];
@@ -40,20 +40,13 @@
     
     UIEdgeInsets insets = UIEdgeInsetsMake(10, 16, 10, 16);
     
-    CGSize size = [self.label sizeThatFits:CGSizeMake(ScreenWidth - 50 - insets.left - insets.right, CGFLOAT_MAX)];
+    CGSize size = [self.label sizeThatFits:CGSizeMake(ScreenWidth - 50 - insets.left, CGFLOAT_MAX)];
     
     CGFloat width = size.width;
     CGFloat height = size.height;
     
     CGFloat x = (self.isMine) ? self.frame.size.width - width - insets.left - insets.right : 0;
     CGFloat y = 0;
-    
-    CGFloat left = x + insets.left;
-    left += (self.isMine ? -4 : 4);
-    
-    if(doLabel) {
-        self.label.frame = CGRectMake(left, y + insets.top, width, height);
-    }
     
     if (self.isMine) {
         self.bubbleImage.image = [[UIImage imageNamed:@"right_bubble.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:14];

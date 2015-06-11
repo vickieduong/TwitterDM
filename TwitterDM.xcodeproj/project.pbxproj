@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		910EC62F1B29002400C1D122 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 910EC62D1B29002400C1D122 /* Fabric.framework */; };
+		910EC6301B29002400C1D122 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 910EC62E1B29002400C1D122 /* Crashlytics.framework */; };
 		918341A31B26435000A53B8A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 918341A21B26435000A53B8A /* main.m */; };
 		918341A61B26435000A53B8A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 918341A51B26435000A53B8A /* AppDelegate.m */; };
 		918341AC1B26435000A53B8A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 918341AA1B26435000A53B8A /* Main.storyboard */; };
@@ -20,8 +22,6 @@
 		91AE3EF91B27926B004B0CB8 /* right_bubble@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EF11B27926B004B0CB8 /* right_bubble@2x.png */; };
 		91AE3EFA1B27926B004B0CB8 /* Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EF21B27926B004B0CB8 /* Settings.png */; };
 		91AE3EFB1B27926B004B0CB8 /* Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EF31B27926B004B0CB8 /* Settings@2x.png */; };
-		91AE3F021B27AFAB004B0CB8 /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EFE1B27AFAB004B0CB8 /* bg.png */; };
-		91AE3F031B27AFAB004B0CB8 /* bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3EFF1B27AFAB004B0CB8 /* bg@2x.png */; };
 		91AE3F041B27AFAB004B0CB8 /* instructions.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3F001B27AFAB004B0CB8 /* instructions.png */; };
 		91AE3F051B27AFAB004B0CB8 /* instructions@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 91AE3F011B27AFAB004B0CB8 /* instructions@2x.png */; };
 		91AE3F081B27BB17004B0CB8 /* EmptyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 91AE3F071B27BB17004B0CB8 /* EmptyTableViewCell.m */; };
@@ -44,6 +44,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		910EC62D1B29002400C1D122 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		910EC62E1B29002400C1D122 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		9183419D1B26435000A53B8A /* TwitterDM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterDM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		918341A11B26435000A53B8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		918341A21B26435000A53B8A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -63,8 +65,6 @@
 		91AE3EF11B27926B004B0CB8 /* right_bubble@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "right_bubble@2x.png"; path = "Assets/right_bubble@2x.png"; sourceTree = "<group>"; };
 		91AE3EF21B27926B004B0CB8 /* Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Settings.png; path = Assets/Settings.png; sourceTree = "<group>"; };
 		91AE3EF31B27926B004B0CB8 /* Settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Settings@2x.png"; path = "Assets/Settings@2x.png"; sourceTree = "<group>"; };
-		91AE3EFE1B27AFAB004B0CB8 /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bg.png; path = Assets/bg.png; sourceTree = "<group>"; };
-		91AE3EFF1B27AFAB004B0CB8 /* bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg@2x.png"; path = "Assets/bg@2x.png"; sourceTree = "<group>"; };
 		91AE3F001B27AFAB004B0CB8 /* instructions.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = instructions.png; path = Assets/instructions.png; sourceTree = "<group>"; };
 		91AE3F011B27AFAB004B0CB8 /* instructions@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "instructions@2x.png"; path = "Assets/instructions@2x.png"; sourceTree = "<group>"; };
 		91AE3F061B27BB17004B0CB8 /* EmptyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmptyTableViewCell.h; path = Views/EmptyTableViewCell.h; sourceTree = "<group>"; };
@@ -89,6 +89,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				910EC6301B29002400C1D122 /* Crashlytics.framework in Frameworks */,
+				910EC62F1B29002400C1D122 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +107,8 @@
 		918341941B26435000A53B8A = {
 			isa = PBXGroup;
 			children = (
+				910EC62D1B29002400C1D122 /* Fabric.framework */,
+				910EC62E1B29002400C1D122 /* Crashlytics.framework */,
 				9183419F1B26435000A53B8A /* TwitterDM */,
 				918341B91B26435000A53B8A /* TwitterDMTests */,
 				9183419E1B26435000A53B8A /* Products */,
@@ -172,8 +176,6 @@
 		91AE3EEB1B27924F004B0CB8 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				91AE3EFE1B27AFAB004B0CB8 /* bg.png */,
-				91AE3EFF1B27AFAB004B0CB8 /* bg@2x.png */,
 				91AE3F001B27AFAB004B0CB8 /* instructions.png */,
 				91AE3F011B27AFAB004B0CB8 /* instructions@2x.png */,
 				91AE3EEE1B27926B004B0CB8 /* left_bubble.png */,
@@ -220,6 +222,7 @@
 				918341991B26435000A53B8A /* Sources */,
 				9183419A1B26435000A53B8A /* Frameworks */,
 				9183419B1B26435000A53B8A /* Resources */,
+				910EC62C1B28FFF200C1D122 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -294,13 +297,11 @@
 				91AE3EFA1B27926B004B0CB8 /* Settings.png in Resources */,
 				91AE3EF61B27926B004B0CB8 /* left_bubble.png in Resources */,
 				91AE3F041B27AFAB004B0CB8 /* instructions.png in Resources */,
-				91AE3F021B27AFAB004B0CB8 /* bg.png in Resources */,
 				918341AC1B26435000A53B8A /* Main.storyboard in Resources */,
 				91AE3EF91B27926B004B0CB8 /* right_bubble@2x.png in Resources */,
 				918341B11B26435000A53B8A /* LaunchScreen.xib in Resources */,
 				91AE3EF81B27926B004B0CB8 /* right_bubble.png in Resources */,
 				91AE3EF71B27926B004B0CB8 /* left_bubble@2x.png in Resources */,
-				91AE3F031B27AFAB004B0CB8 /* bg@2x.png in Resources */,
 				91AE3EFB1B27926B004B0CB8 /* Settings@2x.png in Resources */,
 				918341AE1B26435000A53B8A /* Images.xcassets in Resources */,
 			);
@@ -314,6 +315,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		910EC62C1B28FFF200C1D122 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 54ad26c2489a0af540e9fb84846a3e923c463672 e0e60da78820e00286564a77fc6552172352c2f4a8a749526d62d6965f1ab9e3";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		918341991B26435000A53B8A /* Sources */ = {
@@ -457,6 +474,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = TwitterDM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -469,6 +491,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = TwitterDM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
